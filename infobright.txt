@@ -1,0 +1,13 @@
+LOAD DATA INFILE '/data0/test.csv' INTO TABLE log_visits FIELDS TERMINATED BY ',' ESCAPED BY '\\' LINES TERMINATED BY '\n';
+
+CREATE TABLE IF NOT EXISTS a (
+  `id` int(11) NOT NULL,
+  `cate_id` int(11) NOT NULL,
+  `site_id` int(11) NOT NULL,
+  `visitor_localtime` varchar(255) NOT NULL,
+  `visitor_idcookie` varchar(255) NOT NULL,
+) ENGINE=BRIGHTHOUSE DEFAULT CHARSET=utf8;
+
+#CSVÎÄ¼þ
+"id","cate_id","site_id","visitor_localtime","visitor_idcookie"
+1,2,3,"asdfasdfas","adsasf"

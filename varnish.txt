@@ -1,0 +1,58 @@
+一、URL
+#http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz @ http://repo.varnish-cache.org/source/
+#http://repo.varnish-cache.org/source/varnish-3.0.2-streaming.tar.gz @ http://repo.varnish-cache.org/source/
+#安装方法 https://www.varnish-cache.org/docs/3.0/installation/install.html#compiling-varnish-from-source
+
+
+
+
+二.下载并安装
+wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
+tar zxf varnish-3.0.3.tar.gz
+cd varnish-3.0.3
+sh autogen.sh
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+./configure  --prefix=/webser/varnish
+make -j 16
+make install
+cd ../
+rm -rf ./varnish-3.0.3
+
+下载页面 ，本文按3.0.0测试
+
+安装(可以通过--prefix指定安装目录（必须是存在的目录），测试中的安装目录为/webser/varnish)。PS：如果确实已安装 pcre 包，依然报错 no package 'libpcre' found，解决办法（文中pkgconfig的路径需要自己确定）
+
+
+二.启动
+
+ /webser/varnish/sbin/varnishd -f /webser/varnish/vcl.conf -s malloc,4G -w 10000,50000,120 -p thread_pools=32 -p thread_pool_max=10000 -p thread_pool_min=200 -p thread_pool_timeout=30 -p http_max_hdr=256 -p http_req_hdr_len=8192 -p sess_timeout=20 -T 0.0.0.0:9090 -S /webser/varnish/key
+/webser/varnish/key是密码文件
+
+
+
+三.日志查看
+#查看用户客户端
+/webser/varnish/bin/varnishtop -l -i RxHeader -C -I ^User-Agent
+
+#查看哪些访问了后台
+/webser/varnish/bin/varnishtop -i txurl
+
+#日志内容
+/webser/varnish/bin/varnishlog 查看日志
+c 查看前端请求
+b 查看后端访问
+C 正则表示式忽略大小写
+ I 正则匹配
+i 标签匹配
+1 打印一次就退出
+X I的排除版
+x i的排除版
+d 算上老数据??
+
+四.一些说明
+默认缓存时间120s。
+设置cookie的响应不会缓存，但发送cookie的请求不影响缓存
+Cache-Control: no-cahce 仍会缓存
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0 都不影响varnish的缓存
+之所以开启session 造成 varnish不能缓存，是由于php加了缓存 Expries为过去时间
+

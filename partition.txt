@@ -1,0 +1,14 @@
+fdisk  /dev/had
+n
+p
+.
+.
+.
+w
+q
+partprobe
+
+mkfs.ext4 /dev/sda4
+
+vim /etc/fstab
+/dev/sda4              /data              ext4    defaults        0 0

@@ -1,0 +1,31 @@
+增加SWAP空间的方法有两个：增加另外一个SWAP分区，或通过创建一个SWAP文件来实现。
+一）增加一个SWAP分区：
+1）创建一个SWAP分区： fdisk -l /dev/cciss/c0d0 (m---p ---n --t (将分区格式转换成 82)--w)(如/dev/cciss/c0d0p6)
+
+2）格式化分区：mkswap -c v1 /dev/cciss/c0d06;
+
+3）修改/etc/fstab文件，增加
+/dev/cciss/c0d0p6 swap swap default 0 0
+
+4）激活swap分区：swapon -a /dev/cciss/c0d0p6;
+
+5） 查看swap 分区：swapon -s 或 free 或 cat /proc/swaps
+
+二）增加一个SWAP文件；
+1）dd if=/dev/zero of=/tmp/tmp.swap bs=1M count =100;( 建立一个100M的文件）；
+
+2）mkswap /tmp/tmp.swap; (标识为SWAP文件）
+
+3）swapon /tmp/tmp.swap;（激活SWAP文件）
+
+4）修改/etc/fstab文件，增加以下内容：
+/tmp/tmp.swap swap swap default 0 0
+
+5）swapon -s 或free 或cat /proc/swaps 查看。
+
+三）删除SWAP分区：
+1） swapoff /dev/cciss/c0d0p6;
+2） 修改/etc/fstab文件。
+
+
+fdisk /dev/sda 修改分区后要用 partprobe

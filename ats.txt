@@ -1,0 +1,110 @@
+#http://apache.fayea.com/apache-mirror/trafficserver/trafficserver-4.0.1.tar.bz2 @ http://trafficserver.apache.org/downloads
+
+#ingore this#first of all, install openssl if  centos less then 5.X
+#wget http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+#tar zxf openssl-1.0.1e.tar.gz
+#cd openssl-1.0.1e
+#./config --prefix=/usr/local --openssldir=/usr/include/openssl
+#make -j 16
+
+groupadd trafficserver
+useradd -g trafficserver trafficserver
+wget http://apache.fayea.com/apache-mirror/trafficserver/trafficserver-4.0.2.tar.bz2
+tar xf trafficserver-4.0.2.tar.bz2
+cd trafficserver-4.0.2
+yum -y install tcl tcl-devel expat expat-devel pcre pcre-devel openssl-devel perl perl-devel.x86_64
+autoreconf -i
+./configure --prefix=/webser/ats --with-user=trafficserver --with-group=trafficserver --with-openssl=/usr/include/openssl
+make -j 16
+make install
+
+#启动
+/webser/ats/bin/trafficserver start
+/webser/ats/bin/trafficserver restart
+#清除缓存内容
+/webser/ats/bin/trafficserver stop
+/webser/ats/bin/traffic_server -Cclear
+#查看状态
+/webser/ats/bin/traffic_logstats
+
+#clear cache
+vim /webser/ats/etc/trafficserver/records.config
+CONFIG proxy.config.proxy_name STRING CDN_dx3
+CONFIG proxy.config.http.cache.cache_responses_to_cookies INT 4
+CONFIG proxy.config.http.cache.ignore_client_cc_max_age INT 1
+CONFIG proxy.config.http.server_ports STRING 80
+CONFIG proxy.config.http.cache.heuristic_min_lifetime INT 120
+CONFIG proxy.config.http.cache.heuristic_max_lifetime INT 120
+CONFIG proxy.config.http.cache.required_headers INT 0
+CONFIG proxy.config.http.insert_response_via_str INT 3
+CONFIG proxy.config.http.response_server_enabled INT 0
+CONFIG proxy.config.cache.ram_cache.size INT 536870912
+CONFIG proxy.config.cache.enable_read_while_writer INT 1
+#CONFIG proxy.config.http.server_ports STRING 80 443:ipv4:ssl #for ssl early then 4.0.1
+
+
+vim /webser/ats/etc/trafficserver/plugin.config
+gzip.so  /webser/ats/etc/trafficserver/gzip.config
+header_filter.so /webser/ats/etc/trafficserver/header_filter.config
+
+echo -ne "enabled true\nremove-accept-encoding true\ncache false\ncompressible-content-type text/*\ncompressible-content-type *javascript*\n" > /webser/ats/etc/trafficserver/gzip.config
+echo -ne "[READ_RESPONSE_HDR]\nX-Powered-By\n" > /webser/ats/etc/trafficserver/header_filter.config
+chown trafficserver:trafficserver /webser/ats/etc/trafficserver/header_filter.config /webser/ats/etc/trafficserver/gzip.config
+
+vim /webser/ats/etc/trafficserver/storage.config
+var/trafficserver 8192M
+
+map http://cdncache.eyoodns.com/ http://117.79.238.61/
+map http://cdncache2.eyoodns.com/ http://117.79.238.61/
+
+map http://minisite.58game.cn/ http://117.79.238.61/
+map http://zhao.58game.cn/ http://117.79.238.61/
+
+regex_map http://.*58game.cn/bbs http://117.79.228.104/bbs
+regex_map http://.*58game.com/bbs http://117.79.228.104/bbs
+regex_map http://.*58youxi.com/ http://117.79.228.124/
+regex_map http://.*58game.com/ http://117.79.228.124/
+regex_map http://.*58game.cn/ http://117.79.228.124/
+regex_map http://.*58game.com/ http://117.79.228.124/
+
+map http://res.stnts.com/ http://117.79.228.124/
+
+map http://music.58kankan.cn/ http://117.79.238.61/
+regex_map http://.*58ting.cn/ http://117.79.238.61/
+
+map http://buy.58kankan.cn/ http://117.79.238.61/
+regex_map http://.*58gou.cn/ http://117.79.238.61/
+regex_map http://.*58taobao.cn/ http://117.79.238.61/
+
+map http://kankan.stnts.com/ http://210.14.141.57:8080/
+regex_map http://.*58kankan.cn/ http://210.14.141.57:8080/
+
+map http://apps.stnts.com/ http://27.112.2.201/
+
+map http://hotel.stnts.com/ http://59.175.145.20/
+
+regex_map http://.*stnts.com/ http://117.79.238.61/
+regex_map http://.*yileyoo.*/ http://117.79.238.61/
+regex_map http://.*e-yoo.*/ http://117.79.238.61/
+
+regex_map http://.*wb123.com/ http://117.79.238.61/
+
+
+
+
+#head_rewrite安装
+#link https://github.com/shukitchan/trafficserver/tree/master/plugins/experimental/header_rewrite
+wget https://github.com/shukitchan/trafficserver/archive/master.zip
+unzip master
+cd trafficserver-master/plugins/experimental/header_rewrite/
+/webser/ats/bin/tsxs -v -C *.cc -o header_rewrite.so
+mv header_rewrite.so /webser/ats/libexec/trafficserver/
+
+#vim /webser/ats/etc/trafficserver/plugin.config
+header_rewrite.so /webser/ats/etc/trafficserver/header_rewrite.config
+
+#vim /webser/ats/etc/trafficserver/header_rewrite.config
+#eg:
+cond %{READ_RESPONSE_HDR_HOOK}
+rm-header Server
+rm-header X-Powered-By

@@ -1,0 +1,3 @@
+ls -il
+find . -inum 528063 -exec rm -i {} \;
+

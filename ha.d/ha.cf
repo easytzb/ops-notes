@@ -1,0 +1,122 @@
+#	File to write debug messages to
+debugfile /var/log/ha-debug
+
+#File to write other messages to
+logfile	/var/log/ha-log
+
+keepalive 2
+deadtime 30
+warntime 10
+initdead 60
+udpport	694
+
+bcast em1
+#msyql1_config
+ucast em1 117.79.238.50 
+#mysql2_config
+#ucast em1 117.79.238.51 
+
+
+auto_failback off
+node Web_MySQL_M1 
+node Web_MySQL_M2
+ping 117.79.238.33
+hopfudge 1
+deadping 5
+
+#pacemaker respawn
+respawn hacluster /usr/lib64/heartbeat/ipfail
+apiauth ipfail gid=haclient uid=hacluster
+
+
+#ping 10.10.10.254
+#ping_group group1 10.10.10.254 10.10.10.253
+#hbaping fc-card-name
+#respawn userid /path/name/to/run
+#respawn hacluster /usr/lib/heartbeat/ipfail
+#
+#	Access control for client api
+#       	default is no access
+#
+#apiauth client-name gid=gidlist uid=uidlist
+#apiauth ipfail gid=haclient uid=hacluster
+
+###########################
+#
+#	Unusual options.
+#
+###########################
+#
+#	hopfudge maximum hop count minus number of nodes in config
+#hopfudge 1
+#
+#	deadping - dead time for ping nodes
+#deadping 30
+#
+#	hbgenmethod - Heartbeat generation number creation method
+#		Normally these are stored on disk and incremented as needed.
+#hbgenmethod time
+#
+#	realtime - enable/disable realtime execution (high priority, etc.)
+#		defaults to on
+#realtime off
+#
+#	debug - set debug level
+#		defaults to zero
+#debug 1
+#
+#	API Authentication - replaces the fifo-permissions-based system of the past
+#
+#
+#	You can put a uid list and/or a gid list.
+#	If you put both, then a process is authorized if it qualifies under either
+#	the uid list, or under the gid list.
+#
+#	The groupname "default" has special meaning.  If it is specified, then
+#	this will be used for authorizing groupless clients, and any client groups
+#	not otherwise specified.
+#	
+#	There is a subtle exception to this.  "default" will never be used in the 
+#	following cases (actual default auth directives noted in brackets)
+#		  ipfail 	(uid=HA_CCMUSER)
+#		  ccm 	 	(uid=HA_CCMUSER)
+#		  ping		(gid=HA_APIGROUP)
+#		  cl_status	(gid=HA_APIGROUP)
+#
+#	This is done to avoid creating a gaping security hole and matches the most
+#	likely desired configuration.
+#
+#apiauth ipfail uid=hacluster
+#apiauth ccm uid=hacluster
+#apiauth cms uid=hacluster
+#apiauth ping gid=haclient uid=alanr,root
+#apiauth default gid=haclient
+
+# 	message format in the wire, it can be classic or netstring, 
+#	default: classic
+#msgfmt  classic/netstring
+
+#	Do we use logging daemon?
+#	If logging daemon is used, logfile/debugfile/logfacility in this file
+#	are not meaningful any longer. You should check the config file for logging
+#	daemon (the default is /etc/logd.cf)
+#	more infomartion can be fould in the man page.
+#	Setting use_logd to "yes" is recommended
+#	
+# use_logd yes/no
+#
+#	the interval we  reconnect to logging daemon if the previous connection failed
+#	default: 60 seconds
+#conn_logd_time 60
+#
+#
+#	Configure compression module
+#	It could be zlib or bz2, depending on whether u have the corresponding 
+#	library	in the system.
+#compression	bz2
+#
+#	Confiugre compression threshold
+#	This value determines the threshold to compress a message,
+#	e.g. if the threshold is 1, then any message with size greater than 1 KB
+#	will be compressed, the default is 2 (KB)
+#compression_threshold 2

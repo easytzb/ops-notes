@@ -1,0 +1,14 @@
+#!/bin/bash
+case "$1" in
+start)
+drbdadm primary mysql_data
+mount /dev/drbd1 /data
+service mysqld start
+;;
+stop)
+service mysqld stop
+umount /dev/drbd1
+drbdadm secondary mysql_data
+;;
+esac
+exit 0

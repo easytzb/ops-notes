@@ -1,0 +1,42 @@
+支持 =、==、!=、 !、&&、||、正则表达式、~、!~。
+
+字符串 "..."，不能包含换行
+
+长字符串 {"..."} 可包含 引号、换行及其它任务控制字符除了NUL(0X00)
+
+反斜线没有转义功能
+
+字符串的连接 用 +操作符
+
+赋值操作须与 “set” 协同使用，只有后台（backend），请求（request），文档对象（document objects）变量，不存在用户自定义变量。所赋的值绝大多数必须手动输入。
+
+set 关键字可以随意修改头信息，remove(unset)关键字可以删除头信息
+
+rollback 关键字随时还原所有对req的修改
+
+synthetic 关键字接受一单独字符串，以在vcl_error中产生一条响应
+
+You can force a crash of the client process with the panic keyword. panic takes a string as argument.
+
+return(action)中断子路由，action参数可以是 deliver、error、fetch、hash、hit_for_pass、lookup、ok、pass、pipe、restart
+
+include 关键字可使用任何地方，以引入另外的VCL文件
+
+
+代码之定义后台(backend)
+backend www {
+  .host = "www.example.com";
+  .port = "http";
+  .connect_timeout = 1s;
+  .first_byte_timeout = 5s;
+  .between_bytes_timeout = 2s;
+}
+如上代码，可以覆盖各种超时参数，
+
+
+代码之选择后台
+if (req.http.host ~ "(?i)^(www.)?example.com$") {
+  set req.backend = www;
+}
+
+

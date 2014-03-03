@@ -1,0 +1,34 @@
+array=(bill   chen  bai   hu);
+num=${#array[@]}                          //获取数组元素的个数。
+for ((i=0;i<num;i++))
+{
+	echo   $array[i];
+}
+
+获取数组的所有元素:
+      ${array[*]}
+     遍历数组就编程了非常简单的事情:
+     for var in  ${array[*]}
+     do
+                  echo $var;
+     done
+${array[*]}
+
+获取字符串的长度:
+str="hello"
+len=${#str}
+a=”one,two,three,four”
+要将$a分割开，可以这样：
+OLD_IFS=”$IFS”
+IFS=”,”
+arr=($a)
+IFS=”$OLD_IFS”
+for s in ${arr[@]}
+do
+echo “$s”
+done
+上述代码会输出
+one
+two
+three
+four

@@ -1,0 +1,42 @@
+#referer: http://genime.blog.163.com/blog/static/167157753201210445128757/
+#download: http://www.samba.org/samba/ftp/samba-latest.tar.gz
+
+#安装
+yum install samba
+
+vim /etc/samba/smb.conf
+
+[global]
+        workgroup = MYGROUP
+        server string = Samba Server Version %v
+        log file = /var/log/samba/log.%m
+        max log size = 50
+        security = user
+        passdb backend = tdbsam
+        load printers = yes
+        cups options = raw
+;[homes]
+;       comment = Home Directories
+;       browseable = no
+;       writable = yes
+[printers]
+        comment = All Printers
+        path = /var/spool/samba
+        browseable = no
+        guest ok = no
+        writable = no
+        printable = yes
+[www]
+        public = no
+        writable = yes
+;       write list = +staff
+        comment = webser document
+        path = /webser/www
+;       printable = yes
+
+
+#检查配置文件
+testparm
+
+#添加用户
+smbpasswd -a username

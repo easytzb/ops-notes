@@ -1,0 +1,118 @@
+#download
+http://www.moosefs.org/download.html
+
+wget http://pro.hit.gemius.pl/hitredir/id=.WCbG2t.7Ln5k1s3Q9xPg8cPfX.wVMc5kyXfrKcJTDH.c7/url=moosefs.org/tl_files/mfscode/mfs-1.6.27-1.tar.gz
+
+yum install -y fuse fuse-devel
+
+#master of install 21
+groupadd mfs
+useradd mfs -g mfs -s /sbin/nologin
+tar zxf mfs-1.6.27-1.tar.gz
+cd mfs-1.6.27
+./configure --prefix=/usr/local/mfs --with-default-user=mfs --with-default-group=mfs --sysconfdir=/etc --localstatedir=/data --disable-mfsmount --disable-mfschunkserver
+make -j 16 && make install
+cd /etc/mfs
+cp mfsmetalogger.cfg.dist mfsmetalogger.cfg
+cp mfsexports.cfg.dist mfsexports.cfg
+cd /data/mfs && cp metadata.mfs.empty metadata.mfs
+
+#metalogger of install 22
+groupadd mfs
+useradd mfs -g mfs -s /sbin/nologin
+tar zxf mfs-1.6.27-1.gz
+cd mfs-1.6.27
+./configure --prefix=/usr/local/mfs --with-default-user=mfs --with-default-group=mfs --sysconfdir=/etc --localstatedir=/var/lib --disable-mfschunkserver --disable-mfsmount
+make -j 16 && make install
+cd /etc/mfs
+cp mfsmetalogger.cfg.dist mfsmetalogger.cfg
+
+#chunk server of install 23 173 216
+groupadd mfs
+useradd mfs -g mfs -s /sbin/nologin
+tar zxf mfs-1.6.27-1.tar.gz
+cd mfs-1.6.27
+./configure --prefix=/usr/local/mfs --with-default-user=mfs --with-default-group=mfs --sysconfdir=/etc/ --localstatedir=/data --disable-mfsmaster --disable-mfsmount
+make -j 16 && make install
+cd /etc/mfs
+cp mfschunkserver.cfg.dist mfschunkserver.cfg
+cp mfshdd.cfg.dist mfshdd.cfg
+
+#client of install 215
+groupadd mfs
+useradd mfs -g mfs -s /sbin/nologin
+tar zxf mfs-1.6.27-1.tar.gz
+cd mfs-1.6.27
+./configure --prefix=/usr/local/mfs --with-default-user=mfs --with-default-group=mfs --disable-mfsmaster --disable-mfschunkserver --enable-mfsmount
+make -j 16 && make install
+
+
+#master of start 21
+vim /etc/mfs/mfsexports.cfg
+/usr/local/mfs/sbin/mfsmaster start
+#netstat -ntlp
+#/usr/local/mfs/sbin/mfsmaster -s
+
+#metalogger of start 22
+vim /etc/mfs/mfsmetalogger.cfg
+MASTER_HOST = 192.168.5.21
+
+
+#/usr/local/mfs/sbin/mfsmetalogger -s
+
+#chunk server of start 23 173 216
+vim /etc/mfs/mfschunkserver.cfg
+BIND_HOST = 192.168.5.23/173
+MASTER_HOST = 192.168.5.21
+mkdir /webser/mfsTestDir
+chown mfs:mfs /webser/mfsTestDir
+vim /etc/mfs/mfshdd.cfg
+
+
+#chunk client of start 215
+mkdir /webser/mfstest
+/usr/local/mfs/bin/mfsmount /webser/mfstest -H 192.168.5.21
+
+#在mfsmaster启动监控程序
+#ython程序，状态查看结束后，请关闭监控程序，否则影响drbd failover
+/usr/local/mfs/sbin/mfscgiserv
+
+#断电后master有可能无法启动，此时需要修复metalogger
+/usr/local/mfs/bin/mfsmetarestore -a
+
+#启动MooseFS 集群
+1.启动mfsmaster 进程
+/usr/local/mfs/sbin/mfsmaster start
+#netstat -ntlp
+2.启动所有的mfschunkserver 进程
+/usr/local/mfs/sbin/mfschunkserver start
+netstat -ntlp|grep chunk
+3.启动mfsmetalogger 进程（如果配置了mfsmetalogger）
+/usr/local/mfs/sbin/mfsmetalogger start
+#ps aux|grep mfs
+当所有的chunkservers 连接到MooseFS master 后，任何数目的客户端可以利用mfsmount 去挂接
+/usr/local/mfs/bin/mfsmount /webser/www/mfstest -H 192.168.5.21
+被export 的文件系统。（可以通过检查master 的日志或是CGI 监视器来查看是否所有的chunkserver
+被连接）。
+
+
+#停止MooseFS 集群
+安全的停止MooseFS 集群：
+1.在所有的客户端卸载MooseFS 文件系统（用umount 命令或者是其它等效的命令）
+umount /webser/mfstest
+2.用mfschunkserver –s 命令停止 chunkserver 进程
+/usr/local/mfs/sbin/mfschunkserver -s
+3.用mfsmetalogger –s 命令停止 metalogger 进程
+/usr/local/mfs/sbin/mfsmetalogger -s
+4.用mfsmaster –s 命令停止master 进程
+/usr/local/mfs/sbin/mfsmaster -s
+
+
+#在挂载机查看挂载的目录
+df -h
+
+#查看目录备份份数设置
+/usr/local/mfs/bin/mfsgetgoal /webser/mfsmnt/
+
+#设置备份份数, r 递归
+/usr/local/mfs/bin/mfssetgoal -r 3 /webser/mfsmnt/

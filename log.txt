@@ -1,0 +1,67 @@
+6 */2 * * * /usr/sbin/logrotate /etc/logrotate.conf
+
+[root@kk_master logs]# cat /etc/logrotate.conf
+# see "man logrotate" for details
+# rotate log files weekly
+weekly
+
+# keep 4 weeks worth of backlogs
+rotate 4
+
+# create new (empty) log files after rotating old ones
+create
+
+# uncomment this if you want your log files compressed
+#compress
+
+# RPM packages drop log rotation information into this directory
+include /etc/logrotate.d
+
+# no packages own wtmp -- we'll rotate them here
+/var/log/wtmp {
+    monthly
+    minsize 1M
+    create 0664 root utmp
+    rotate 1
+}
+# system-specific logs may be also be configured here.
+
+
+
+[root@kk_master logs]# cat /etc/logrotate.d/kankan
+/webser/logs/php.log {
+    missingok
+    notifempty
+    size 1k
+    mail xumingsong@stnts.com
+    mailfirst
+    create 0644 www www
+    postrotate
+        /usr/bin/killall php-fpm
+        /webser/php53/sbin/php-fpm
+    endscript
+}
+
+/webser/logs/error_kankan.log {
+    missingok
+    notifempty
+    size 30k
+    mail xumingsong@stnts.com
+    mailfirst
+    create 0644 root root
+    postrotate
+        kill -HUP `cat /webser/logs/nginx.pid`
+    endscript
+}
+
+/webser/mysql51/var/slowquery.log {
+    missingok
+    notifempty
+    size 200
+    mail xumingsong@stnts.com
+    mailfirst
+    create 0644 mysql mysql
+    postrotate
+        kill -HUP `cat /webser/mysql51/var/kk_master.pid`
+    endscript
+}

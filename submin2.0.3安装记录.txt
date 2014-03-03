@@ -1,0 +1,106 @@
+wget http://mirror.bit.edu.cn/apache//httpd/httpd-2.4.1.tar.gz
+tar zxf httpd-2.4.1.tar.gz
+cd  httpd-2.4.1
+wget http://apache.etoak.com//apr/apr-1.4.6.tar.gz
+tar zxf apr-1.4.6.tar.gz
+mv apr-1.4.6 ./srclib/apr
+
+wget http://apache.etoak.com//apr/apr-util-1.4.1.tar.gz
+tar zxf apr-util-1.4.1.tar.gz
+mv apr-util-1.4.1 ./srclib/apr-util
+
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.30.tar.gz
+tar zxf pcre-8.30.tar.gz
+cd ./pcre-8.30
+./configure
+make -j 16
+make install
+cd ../
+
+wget http://www.openssl.org/source/openssl-1.0.0f.tar.gz
+tar zxf openssl-1.0.0f.tar.gz
+cd openssl-1.0.0f
+./config -fPIC --prefix=/usr/local/openssl/ --shared
+make -j 16
+make install
+cd ../
+
+./configure  --prefix=/webser/httpd2  --enable-rewrite  --enable-speling  --enable-ssl  --enable-so  --enable-dav --with-ssl=/usr/local/openssl  LDFLAGS=-L/usr/lib64
+make -j 16
+make install
+cd ../
+
+
+wget http://www.sqlite.org/sqlite-autoconf-3071100.tar.gz
+tar zxf sqlite-autoconf-3071100.tar.gz
+cd sqlite-autoconf-3071100
+./configure
+make -j 16
+make install
+cd ../
+
+wget http://superb-sea2.dl.sourceforge.net/project/libpng/zlib/1.2.6/zlib-1.2.6.tar.gz
+tar zxf zlib-1.2.6.tar.gz
+cd zlib-1.2.6
+./configure
+make -j 16
+make install
+cd ../
+
+
+
+wget http://labs.renren.com/apache-mirror/subversion/subversion-1.7.4.tar.gz
+tar zxf subversion-1.7.4.tar.gz
+cd subversion-1.7.4
+sh ./autogen.sh
+./configure --prefix=/webser/svn --with-apxs=/webser/httpd2/bin/apxs --with-apr=/webser/httpd2/bin/apr-1-config --with-apr-util=/webser/httpd2/bin/apu-1-config
+make -j 16
+make install
+cd ../
+
+wget http://supermind.nl/submin/current/submin-1.2.11.tar.gz
+tar zxf submin-1.2.11.tar.gz
+cd submin-1.2.11/bin
+python  ./install.py /webser/submin
+
+cp -rf /webser/submin/share/submin/pd2 /webser/submin/share/submin/va_release
+/webser/submin/bin/submin-admin create va_release -r /webser/submin/resp/va_release -e /webser/submin/resp/va_release -f -a va_release --http-base /va_release
+#在/webser/httpd2/conf/httpd.conf 添加代码
+#修改 vim /webser/submin/resp/va_release/va_release.conf 为
+base_url = /va_release
+svn_base_url = /va_releasesvn
+trac_base_url = /va_releasetrac
+
+#修改 vim /webser/submin/resp/va_release/va_release-apache-cgi.conf 为
+
+
+    Alias /va_release /webser/submin/share/submin/va_release ######################
+    <Directory /webser/submin/share/submin/va_release> ######################
+        Order allow,deny
+        Allow from all
+        Options ExecCGI FollowSymLinks
+        AddHandler cgi-script py cgi pl
+        SetEnv SUBMIN_CONF /webser/submin/resp/va_release/va_release.conf
+
+        RewriteEngine on
+        RewriteBase /va_release	######################
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.+)$ submin.cgi/$1
+
+        RewriteRule ^/?$ submin.cgi/
+    </Directory>
+
+    <Location /va_releasesvn>	######################
+        DAV svn
+        SVNParentPath /webser/submin/resp/va_release/svn
+
+        AuthType Basic
+        AuthName "Subversion repository"
+
+        AuthUserFile /webser/submin/resp/va_release/htpasswd
+        AuthzSVNAccessFile /webser/submin/resp/va_release/authz
+
+        Satisfy Any
+        Require valid-user
+    </Location>

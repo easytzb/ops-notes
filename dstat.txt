@@ -1,0 +1,2 @@
+#!/bin/sh
+dstat -T -n > >( while read line; do _dir=$(date +/webser/logs/%Y%m) && mkdir -p ${_dir} && echo "${line}">>"${_dir}/$(date +%d)"; done ) &

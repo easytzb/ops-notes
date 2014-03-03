@@ -1,0 +1,8 @@
+wget http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz --no-check-certificate
+tar zxvf inotify-tools-3.14.tar.gz
+cd inotify-tools-3.14
+./configure
+make
+make install
+ln -sv /usr/local/lib/libinotify* /usr/lib/
+ln -s /usr/local/lib/libinotifytools.so.0 /usr/lib64/libinotifytools.so.0

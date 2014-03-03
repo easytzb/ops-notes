@@ -1,0 +1,69 @@
+#download:
+#http://nginx.org/download/nginx-1.2.6.tar.gz @ http://wiki.nginx.org/Install#Stable
+#http://luajit.org/download/LuaJIT-2.0.1.tar.gz @ http://luajit.org/download.html
+#https://github.com/simpl/ngx_devel_kit/archive/v0.2.18.tar.gz @ https://github.com/simpl/ngx_devel_kit/tags
+#https://github.com/chaoslawful/lua-nginx-module/archive/v0.7.20.tar.gz @ https://github.com/chaoslawful/lua-nginx-module/tags
+#ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz @ ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
+
+#https://github.com/agentzh/lua-resty-redis/archive/master.zip @ https://github.com/agentzh/lua-resty-redis 将lib下的.lua为有效文件
+
+#http://www.kyne.com.au/~mark/software/download/lua-cjson-2.1.0.tar.gz @ http://www.kyne.com.au/~mark/software/lua-cjson.php 解压 make -j 16 将cjson.so复制到/usr/local/lib/lua/5.1/
+
+
+mkdir -p /root/lua
+cd /root/lua
+wget http://nginx.org/download/nginx-1.2.6.tar.gz
+wget http://luajit.org/download/LuaJIT-2.0.1.tar.gz
+wget https://github.com/simpl/ngx_devel_kit/archive/v0.2.18.zip
+wget https://github.com/chaoslawful/lua-nginx-module/archive/v0.7.20.zip
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz
+
+install:
+#安装luajit
+tar zxf LuaJIT-2.0.1.tar.gz
+cd LuaJIT-2.0.1
+make -j 16
+make install
+export LUAJIT_LIB=/usr/local/lib
+export LUAJIT_INC=/usr/local/include/luajit-2.0
+cd ../
+rm -rf ./LuaJIT-2.0.1
+
+#安装nginx
+tar zxf nginx-1.2.6.tar.gz
+unzip v0.2.18
+unzip v0.7.20
+tar zxf pcre-8.32.tar.gz
+cd nginx-1.2.6
+./configure --prefix=/webser/nginx --with-pcre=/root/lua/pcre-8.32 --group=www --user=www --with-http_stub_status_module --with-http_ssl_module --add-module=/root/lua/ngx_devel_kit-0.2.18 --add-module=/root/lua/lua-nginx-module-0.7.20
+make -j 16
+make install
+groupadd -f www
+useradd -g www www
+mkdir -p /webser/logs
+chown -R www:www /webser/logs
+cd ../
+rm -rf ./nginx-1.2.6 ./lua-nginx-module-0.7.20/ ./ngx_devel_kit-0.2.18/ ./pcre-8.32
+
+#配置
+cp -f /root/lamp/config/nginx.conf /webser/nginx/conf/nginx.conf
+cp -f /root/lamp/config/fcgi.conf /webser/nginx/conf/fcgi.conf
+
+可能的错误：
+cannot open shared object file: No such file or directory
+解决：
+echo "/usr/local/lib" > /etc/ld.so.conf.d/usr_local_lib.conf
+ldconfig
+
+lua-resty-redis-master的安装
+将 https://github.com/agentzh/lua-resty-redis/archive/master.zip 中的lib中的*.lua复制到所需目录
+
+cjson安装
+https://github.com/mpx/lua-cjson/archive/master.zip @ https://github.com/mpx/lua-cjson/
+
+wget https://github.com/mpx/lua-cjson/archive/master.zip
+unzip master
+cd lua-cjson-master
+# LUA_INCLUDE_DIR 修改为 $(PREFIX)/include/luajit-2.0
+make
+mv cjson.so /usr/local/lib/lua/5.1/

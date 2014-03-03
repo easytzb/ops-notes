@@ -1,0 +1,7 @@
+//当前路径脚本
+cd /d %~dp0
+set MYSQL_HOME=%cd%
+echo %MYSQL_HOME%
+
+#新建服务
+sc create Apache binpath= "d:\webser\Apache\bin\httpd.exe -k runservice" displayname= "Apache" start= auto

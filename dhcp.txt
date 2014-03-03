@@ -1,0 +1,1 @@
+./dhcpd -cf /root/tzb/dhcp/etc/dhcpd.conf -lf /root/tzb/dhcp/etc/dhcpd.leases

@@ -1,0 +1,76 @@
+数据导入
+/webser/mongodb/bin/mongoimport -h 127.0.0.1 -d urljk -c ip -type csv -file /root/csv/ip.csv --headerline
+
+
+数据导出
+/webser/mongodb/bin/mongoexport -h 192.168.80.240:27100 -q "{nid:1}" -d test -c pccount --csv -f nid,prov,city,ggcount,agentid -o /webser/mongodb/db.db
+
+
+mongodb启动
+/webser/mongodb/bin/mongod -bind_ip 127.0.0.1 --port 27104 --dbpath /webser/mongodb/data/27104  --logpath /webser/mongodb/logs/27104/mongod.log --logappend --fork --rest &>null
+
+
+mongdb 关闭
+> use admin
+> db.shutdownServer()
+//or
+> db.adminCommand({shutdown : 1})
+
+> use admin
+> db.shutdownServer()
+//or
+db.adminCommand({shutdown : 1})
+
+//下面命令，primary node将给secondary nodes 5秒时间同步。
+//若5秒内没有服务器同步上来，则不执行关闭操作
+> db.adminCommand({shutdown : 1, timeoutSecs : 5})
+> // or
+> db.shutdownServer({timeoutSecs : 5})
+> // sample output:
+{
+        "closest" : NumberLong(1307651781),
+        "difference" : NumberLong(1307651808),
+        "errmsg" : "no secondaries within 10 seconds of my optime",
+        "ok" : 0
+}
+//强制关闭 primary node，不做secondary nodes同步检查
+db.adminCommand({shutdown : 1, force : true})
+> // or
+> db.shutdownServer({force : true})
+
+
+Replica Sets 命令相关
+$ mkdir -p /webser/mongodb/data/27102
+$ mkdir -p /webser/mongodb/logs/27102
+$ mkdir -p /webser/mongodb/data/27103
+$ mkdir -p /webser/mongodb/logs/27103
+$ mkdir -p /webser/mongodb/data/27104
+$ mkdir -p /webser/mongodb/logs/27104
+$ /webser/mongodb/bin/mongod --replSet myset  --port 27102 --dbpath /webser/mongodb/data/27102 --oplogSize 100 --logpath /webser/mongodb/logs/27102/mongod.log --logappend --fork --rest &
+$ /webser/mongodb/bin/mongod --replSet myset  --port 27103 --dbpath /webser/mongodb/data/27103 --oplogSize 100 --logpath /webser/mongodb/logs/27103/mongod.log --logappend --fork --rest &
+$ /webser/mongodb/bin/mongod --replSet myset  --port 27104 --dbpath /webser/mongodb/data/27104 --oplogSize 100 --logpath /webser/mongodb/logs/27104/mongod.log --logappend --fork --rest &
+$ /webser/mongodb/bin/mongo 127.0.0.1:27102/admin
+>cfg = {_id : "myset", members : [{ _id : 0, host : "192.168.5.211:27102" },{ _id : 1, host : "192.168.5.211:27103" },{ _id : 2, host : "192.168.5.211:27104" }] }
+{
+        "_id" : "myset",
+        "members" : [
+                {
+                        "_id" : 0,
+                        "host" : "192.168.5.211:27102"
+                },
+                {
+                        "_id" : 1,
+                        "host" : "192.168.5.211:27103"
+                },
+                {
+                        "_id" : 2,
+                        "host" : "192.168.5.211:27104"
+                }
+        ]
+}
+>rs.initiate(cfg)
+{
+        "info" : "Config now saved locally.  Should come online in about a minute.",
+        "ok" : 1
+}
+>

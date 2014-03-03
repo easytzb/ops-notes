@@ -1,0 +1,27 @@
+小技巧：
+在~/.vimrc中增加以下这行：
+map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR> 
+
+Ctags
+#http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz @ http://ctags.sourceforge.net/
+
+wget http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz
+
+tar zxf http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz
+cd ctags-5.8
+./configure
+make
+make install
+
+cd 到需要生成tags的目录下，运行如下：
+ctags -f ~/.vim/mytags/framework \
+-h ".php" -R \
+--exclude="\.svn" \
+--totals=yes \
+--tag-relative=yes \
+--PHP-kinds=+cf \
+--regex-PHP='/abstract class ([^ ]*)/\1/c/' \
+--regex-PHP='/interface ([^ ]*)/\1/c/' \
+--regex-PHP='/(public |static |abstract |protected |private )+function ([^ (]*)/\2/f/'
+
+taglist

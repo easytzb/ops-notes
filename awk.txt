@@ -1,0 +1,3 @@
+df -Ph |awk -v g=${groupid} 'BEGIN {max=0} $5 ~ /[0-9]+%/ {if (max<=strtonum($5)) max=strtonum($5)} END {print "maxdisk["g"]="max}'
+
+netstat -n|awk -v g=${groupid} '/^tcp/ {++stat[$NF]} END {for (key in stat) rexturn=(rexturn"&"key"["g"]="stat[key]);print rexturn}'|sed 's/^&//g'|sed 's/\r//g'

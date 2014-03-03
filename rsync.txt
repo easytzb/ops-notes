@@ -1,0 +1,2 @@
+rsync -av /webser/www/58gamev3/* /webser/ --exclude="public/bbs"
+time (rsync -aPuc --delete  117.79.238.46:/webser/www/* /webser/www.bak)

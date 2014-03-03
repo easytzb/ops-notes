@@ -1,0 +1,19 @@
+downaload
+#http://cn2.php.net/get/php-5.3.18.tar.gz/from/this/mirror @ http://php.net/downloads.php
+
+wget http://cn2.php.net/get/php-5.3.18.tar.gz/from/this/mirror
+
+tar zxf php-5.3.18.tar.gz
+cd php-5.3.18
+./configure --prefix=/webser/php53 --enable-pcntl --enable-fpm --with-config-file-path=/webser/php53/etc --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd  --enable-mbstring --enable-soap --enable-sockets --enable-zip LDFLAGS=-L/usr/lib64
+make -j 16
+make install
+mkdir -p /webser/www
+groupadd -f www
+useradd -g www www
+cd ..
+rm -rf ./php-5.3.18
+mkdir -p /webser/sess_tmp
+chown -R www:www /webser/sess_tmp
+cp -f /root/lamp/config/php.ini /webser/php53/etc/php.ini
+cp -f /root/lamp/config/php-fpm.conf /webser/php53/etc/php-fpm.conf

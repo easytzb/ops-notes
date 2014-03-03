@@ -1,0 +1,14 @@
+#download
+amoeba
+#http://sourceforge.net/projects/amoeba/
+http://sourceforge.net/projects/amoeba/files/Amoeba%20for%20mysql/2.2.x/
+mkdir amoeba
+mv amoeba-mysql-binary-2.2.0.tar.gz  amoeba
+tar zxf amoeba-mysql-binary-2.2.0.tar.gz
+
+java
+http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
+tar zxf jdk-7u25-linux-x64.gz
+mv jdk1.7.0_25 /usr/local/jre1.7
+
+export JAVA_HOME=/usr/local/jre1.7;export PATH=$PATH:JAVA_HOME/bin;export AMOEBA_HOME=/usr/local/amoeba;/usr/local/amoeba/bin/amoeba start &

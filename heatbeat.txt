@@ -1,0 +1,73 @@
+http://linux-ha.org/wiki/Download
+
+groupadd haclient -g 1001
+useradd -g haclient hacluster -u 1002
+
+
+#vi /root/.bash_profile，添加如下内容：
+/*
+export PREFIX=/usr/local/ha
+export LCRSODIR=$PREFIX/libexec/lcrso
+export CLUSTER_USER=hacluster
+export CLUSTER_GROUP=haclient
+export CFLAGS="$CFLAGS -I$PREFIX/include -L$PREFIX/lib"
+getent group ${CLUSTER_GROUP} >/dev/null || groupadd -r ${CLUSTER_GROUP}
+getent passwd ${CLUSTER_USER} >/dev/null || useradd -r -g ${CLUSTER_GROUP} -d /var/lib/heartbeat/cores/hacluster -s /sbin/nologin -c "cluster user" ${CLUSTER_USER}
+*/
+
+
+yum install libxslt-devel libtool-ltdl-devel glib2-devel libxml2 libxml2-devel bzip2-devel libuuid-devel e2fsprogs-devel
+
+0.下载文件
+mkdir -p /root/heartbeat
+cd /root/heartbeat
+/*链接在此 http://linux-ha.org/wiki/Download*/
+wget http://hg.linux-ha.org/heartbeat-STABLE_3_0/archive/7e3a82377fa8.tar.bz2
+wget http://hg.linux-ha.org/glue/archive/glue-1.0.9.tar.bz2
+wget https://github.com/ClusterLabs/resource-agents/tarball/v3.9.2
+
+
+
+tar xf glue-1.0.9.tar.bz2\
+&& cd Reusable-Cluster-Components-glue--glue-1.0.9/\
+&& ./autogen.sh\
+&& ./configure --prefix=$PREFIX  --with-daemon-user=${CLUSTER_USER} --with-daemon-group=${CLUSTER_GROUP} --enable-fatal-warnings=no\
+&& make -j 16\
+&& make install\
+&& cd ../\
+&& rm -rf ./Reusable-Cluster-Components-glue--glue-1.0.9/\
+&& tar xf ClusterLabs-resource-agents-v3.9.2-0-ge261943.tar.gz\
+&& cd ClusterLabs-resource-agents-b735277/\
+&& ./autogen.sh\
+&& ./configure --prefix=$PREFIX --enable-fatal-warnings=no\
+&& make -j 16\
+&& make install\
+&& cd ../\
+&& rm -rf ./ClusterLabs-resource-agents-b735277/\
+&& tar xf 7e3a82377fa8.tar.bz2\
+&& cd Heartbeat-3-0-7e3a82377fa8/\
+&& ./bootstrap\
+&& ./configure --prefix=$PREFIX --enable-fatal-warnings=no\
+&& make -j 16\
+&& make install\
+&& cd ../\
+&& rm -rf ./Heartbeat-3-0-7e3a82377fa8/
+
+/*4.安装pacemaker
+tar jxvf  Pacemaker-1-0-c3869c00c759.tar.bz2
+cd Pacemaker-1-0-c3869c00c759
+./autogen.sh
+./configure --prefix=$PREFIX --with-lcrso-dir=$LCRSODIR --enable-fatal-warnings=no
+make
+make install*/
+
+
+/*配置 参考 http://ixdba.blog.51cto.com/2895551/746271*/
+cp  /usr/local/ha/share/doc/heartbeat/authkeys   /usr/local/ha/etc/ha.d
+cp  /usr/local/ha/share/doc/heartbeat/ha.cf  /usr/local/ha/etc/ha.d
+cp  /usr/local/ha/share/doc/heartbeat/haresources   /usr/local/ha/etc/ha.d
+
+
+cp -rp /usr/local/ha/usr/lib/ocf /usr/lib/
+
+

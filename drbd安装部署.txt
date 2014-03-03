@@ -1,0 +1,111 @@
+http://www.turbolinux.com.cn/turbo/wiki/doku.php?id=%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86:drbd%E7%9A%84%E4%BD%BF%E7%94%A8#drbd%E4%BD%BF%E7%94%A8%E7%9A%84%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA
+http://wenku.baidu.com/view/d9037020bcd126fff7050b8b.html
+http://www.linuxidc.com/Linux/2012-04/59299.htm
+http://www.oschina.net/p/drbd-mgr-console
+
+1.安装内核开发环境
+yum -y install kernel-devel kernel-headers
+
+2.下载drdb
+mkdir ./download
+cd ./download/
+wget http://elrepo.org/elrepo-release-6-4.el6.elrepo.noarch.rpm
+rpm -ivUh elrepo-release-6-4.el6.elrepo.noarch.rpm
+vim +8 /etc/yum.repos.d/elrepo.repo #( change line #8 'enable=0')
+yum --enablerepo=elrepo -y install kmod-drbd84
+
+#新建分区
+fdisk /dev/sda
+n----p----1----X---X+-----w
+
+
+#重启系统 检查是否加载成功
+lsmod |grep drbd
+modprobe -l |grep drbd
+
+#配置/etc/drbd.conf,参考./drbd.conf
+dd if=/dev/zero of=/dev/sda2 bs=1M count=128
+
+drbdadm create-md mysql_data
+
+service drbd start  #不能加载drbd，则是uname -a内核不匹配，让linux以匹配的内核启动
+
+drbdadm primary all #报错 0: State change failed: (-2) Need access to UpToDate data 则用下面的页面
+drbdadm -- --overwrite-data-of-peer primary all
+
+#格式化/dev/drbd1
+mkfs.ext4 /dev/drbd1
+
+#将/dev/drbd1 挂载到/data目录
+mount /dev/drbd1 /data/
+
+#查看drbd状态
+service  drbd status 或cat /proc/drbd
+/*
+	ro是角色信息：
+	Primary/Secondary（代表这个是主节点）
+	Secondary/Primary（代表这个是副节点）
+
+	ds是磁盘状态：
+	UpToDate/Inconsistent（正在同步，数据还没有一致）
+	UpToDate/UpToDate    （同步完成，数据一致）
+
+	ns是网络传输的数据包：以K为字节
+
+	dw是磁盘写操作
+
+	dr是磁盘读操作
+*/
+
+
+#**********************heartbeat***********************************/
+wget ftp://mirror.switch.ch/pool/1/mirror/scientificlinux/6rolling/i386/os/Packages/epel-release-6-5.noarch.rpm
+rpm -ivUh epel-release-6-5.noarch.rpm
+yum --enablerepo=epel install heartbeat -y
+#配置可以参考 ha.d.tar.gz
+cp -p /usr/share/doc/heartbeat-3.0.4/ha* /etc/ha.d/
+cp -p /usr/share/doc/heartbeat-3.0.4/authkeys /etc/ha.d/ #此文件权限必须是600
+
+#修改haresource 如下
+# cat /etc/ha.d/haresources
+Web_MySQL_M1 IPaddr::117.79.238.60/32/em1 IPaddr::192.168.100.60/32/em2 drbd_primary
+#cat /etc/ha.d/ha.cf 修改配置
+
+#在确定drbd启动后
+service heartbeat start
+
+
+
+#******************一些命令*******************#
+drbdadm create-md mysql_data之前执行以下命令
+dd if=/dev/zero of=/dev/sda4 bs=1M count=128
+
+创建完meta-data区块后，启动服务
+service drbd start 或 /usr/local/drbd8/etc/rc.d/init.d/drbd start
+
+cat /proc/drbd检查启动情况
+
+初始一个主机，以该主机磁盘进行初始化
+drbdsetup /dev/drbd1 primary -o
+
+设置主机
+drbdadm primary mysql_data
+
+挂载磁盘，即可使用
+mount /dev/drbd1 /data
+
+故障切换
+主机DOWN机或无法提供服务，则在备机执行以下命令即可接管
+drbdadm primary r0
+mount /dev/drbd1 /data
+
+解决脑裂：
+1、选中未提供服务的那台机器为备机执行以下命令
+drbdadm secondary mysql_data
+drbdadm -- --discard-my-data connect mysql_data
+2、在主机上执行以下命令
+drbdadm connect mysql_data
+
+
+
+

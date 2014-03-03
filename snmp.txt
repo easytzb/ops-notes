@@ -1,0 +1,257 @@
+安装
+
+
+检查snmp通信
+snmpwalk 27.112.2.171  -c stnts_eyoo  -v 2c system
+#速度快于snmpwalk
+snmpbulkwalk  27.112.2.171  -c stnts_eyoo  -v 2c system
+
+vim /usr/share/snmp/mibs/RFC1213-MIB.txt
+
+
+1)配置snmp,编辑/etc/snmp/snmpd.conf
+　　1.1)首选是定义一个共同体名(community),这里是public,及可以访问这个public的用户名(sec name)，这里是notConfigUser。Public相当于用户notConfigUser的密码
+　　1.2)定义一个组名（groupName）这里是notConfigGroup，及组的安全级别，把notConfigUser这个用户加到这个组中。
+　　1.3)定义一个可操作的范围(view)名， 这里是all，范围是 .1
+　　1.4)定义notConfigUser这个组在all这个view范围内可做的操作，这时定义了notConfigUser组的成员可对.1这个范围做只读操作。
+　　1.5)重启snmpd服务
+　　1.6)列出snmpd开放端口
+
+　　参考答案:
+　　vi /etc/snmp/snmpd.conf
+
+　　做如下修改:
+　　# sec.name source community
+　　com2sec notConfigUser default public
+
+
+　　# groupName securityModel securityName
+　　group notConfigGroup v1 notConfigUser
+　　group notConfigGroup v2c notConfigUser
+
+　　# name incl/excl subtree mask(optional)
+　　view all included .1
+
+　　# group context sec.model sec.level prefix read write notif
+　　access notConfigGroup "" any noauth exact all none none
+
+　　保存退出
+
+　　service snmpd restart
+
+　　netstat -anp|grep snmp
+
+
+
+　　2.1)查看阅读mib-2所管理的信息类别的MIB文件
+
+　　参考答案:
+　　more /usr/share/snmp/mibs/RFC1213-MIB.txt
+
+
+
+　　3)用snmpbulkwalk命令连接snmp服务器(192.168.6.53),获取snmp服务器的mib-2各种资讯
+　　3.1)snmpbulkwalk用于通过SNMPv2 的SNMP GET BULK请求命令与其它网络实体通信,只能用于snmpv2,速度快于snmpwalk
+　　3.2)指定共同体为public,协议为snmp2c
+　　3.3)获取mib-2的system的数据，即.1.3.6.1.2.1.1(iso->identified organization->dod->internet->mgmt2->mib-2->system)
+　　3.4)获取mib-2的interface的数据,即.1.3.6.1.2.1.2(iso->identified organization->dod->internet->mgmt2->mib-2->interface)
+　　3.5)获取mib-2的address translation的数据，即.1.3.6.1.2.1.3(iso->identified organization->dod->internet->mgmt2->mib-2->address translation)
+　　3.6)获取mib-2库的ip的数据,即.1.3.6.1.2.1.4(iso->identified organization->dod->internet->mgmt2->mib-2->ip)
+　　3.7)获取mib-2库的icmp的数据，即.1.3.6.1.2.1.5(iso->identified organization->dod->internet->mgmt2->mib-2->icmp)
+　　3.8)获取mib-2库的tcp的数据,即.1.3.6.1.2.1.6(iso->identified organization->dod->internet->mgmt2->mib-2->tcp)
+　　3.9)获取mib-2库的udp的数据，即.1.3.6.1.2.1.7(iso->identified organization->dod->internet->mgmt2->mib-2->udp)
+　　3.10)获取mib-2库的snmp的数据,即.1.3.6.1.2.1.11(iso->identified organization->dod->internet->mgmt2->mib-2->snmp)
+
+　　参考答案:
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.1
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.2
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.3
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.4
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.5
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.6
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.7
+　　snmpbulkwalk -v 2c 192.168.6.53 -c public .1.3.6.1.2.1.11
+
+
+
+
+　　4)查看阅读HOST-RESOURCES的MIB文件
+
+　　参考答案:
+　　more /usr/share/snmp/mibs/HOST-RESOURCES-MIB.txt
+
+
+
+　　5)查用snmpwalk命令连接snmp服务器(192.168.6.53),获取snmp服务器的HOST-RESOURCES的各种资讯
+　　5.1)指定共同体为public,协议为snmpv1
+　　5.2)获取HOST-RESOURCES的host(所有资源)
+　　5.3)获取HOST-RESOURCES的hrSystem(系统日期/时间,初始化设备,内核引导参数,系统当前的登录用户数,当前的进程数,支持的最大进程数)
+　　5.4)获取HOST-RESOURCES的hrStorage(内存大小，磁盘大小，使用情况等)
+　　5.5)获取HOST-RESOURCES的hrDevice(设备ID,设备类型,对设备的描述,引导盘,挂载分区等)
+　　5.6)获取HOST-RESOURCES的hrSWRun(线上系统的进程ID,进程名,涉及的参数,运行状态等)
+　　5.7)获取HOST-RESOURCES的hrSWRunPerf(线上系统进程占用CPU的时间，占用内存的大小)
+　　5.8)获取HOST-RESOURCES的hrSWInstalledName(已安装的软件包名)和hrSWInstalledDate(已安装的软件包时间)
+
+　　参考答案:
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::host
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrSystem
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrStorage
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrDevice
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrSWRun
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrSWRunPerf
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrSWInstalledName
+　　snmpwalk -v 1 192.168.6.53 -c public HOST-RESOURCES-MIB::hrSWInstalledDate
+
+
+
+　　6)查看阅读IF-MIB的MIB文件
+
+　　参考答案:
+　　more /usr/share/snmp/mibs/IF-MIB.txt
+
+
+
+　　7)用snmpdelta命令连接snmp服务器(192.168.6.53),监控网卡流量等信息
+　　7.1)指定共同体为public,协议为snmpv1,以表格的方式输出结果,显示时间戳
+　　7.2)监控IF-MIB::ifInUcastPkts(输入流量),IF-MIB::ifOutUcastPkts(输出流量),格式为.,如监控本地的第二块网卡instance为2
+　　7.3)监控ifInDiscards(已经丢弃的收到的数据包的总数),格式同上
+
+　　参考答案:
+　　snmpdelta -c public -v 1 -Cs -CT 192.168.6.53 IF-MIB::ifInUcastPkts.2 IF-MIB::ifOutUcastPkts.2
+　　snmpdelta -c public -v 1 -Cs -CT 192.168.6.53 ifInDiscards.2
+
+
+
+　　8)用snmpnetstat命令连接snmp服务器(192.168.6.53),查看snmp服务器的端口连接信息
+　　8.1)指定共同体为public,协议为snmp2c
+　　8.2)获取192.168.6.53的所有开放端口状态
+　　8.3)获取192.168.6.53的网络接口状态
+　　8.4)获取192.168.6.53的TCP协议的开放端口状态
+
+　　参考答案:
+　　snmpnetstat -v 2c -c public -a 192.168.6.53
+　　snmpnetstat -v 2c -c public -i 192.168.6.53
+　　snmpnetstat -v 2c -c public -P tcp 192.168.6.53
+
+
+
+　　9)用snmptranslate 命令在 MIB OID 在数字和文字名称之间进行转换
+　　9.1)用snmptranslate把symbol 格式的HOST-RESOURCES-MIB::hrSystem 转换为 numberic 格式的oid,用-On(输出数字格式的oid),使用 -IR(允许“随机”访问 MIB)
+　　9.2)用snmptranslate把symbol 格式的HOST-RESOURCES-MIB::hrSystem 转换为symbol 格式的 oid,用-Onf(输出符号格式的oid)
+　　9.3)用snmptranslate输出该对象(iso.org.dod.internet.mgmt.mib-2)的详细定义,用-Td(包括文字名称、所属 MIB、类型、状态、读写权限、描述信息，数字格式的 OID)
+　　9.4)用snmptranslate打印从指定OID(.1.3.6.1.2.1)开始一直到该OID(.1.3.6.1.2.1)所属的 MIB 子树末端的树型结构信息
+　　9.5)用snmptranslate导出所有已经加载的 MIB 的数据，每个对象一行
+　　9.6)用snmptranslate导出所有已经加载的 MIB 的对象，并且输出完整的 oid 路径
+　　9.7)用snmptranslate导出已经加载的所有 MIB 的数字格式的 oid ，不含值和类型，仅仅有 oid 而已
+　　9.8)用snmptranslate只输出文字格式的 OID 名称而已
+
+　　参考答案:
+　　snmptranslate -On -IR HOST-RESOURCES-MIB::hrSystem
+　　snmptranslate -Onf -IR HOST-RESOURCES-MIB::hrSystem
+　　snmptranslate -Td iso.org.dod.internet.mgmt.mib-2
+　　snmptranslate -Tp iso.org.dod.internet.mgmt.mib-2
+　　snmptranslate -Ta
+　　snmptranslate -Tl
+　　snmptranslate -To
+　　snmptranslate -Ts
+
+
+
+　　10.1)用snmptranslate查询MID OID的数字为1.3.6.1.4.1.2021的详细信息
+　　10.2)用snmptranslate列出1.3.6.1.4.1.2021树型结构
+　　10.3)用snmpwalk连接192.168.6.53的snmp,通过UCD-SNMP-MIB列出proc的信息
+　　10.4)用ps -e找过三个进程,写入到/etc/snmp/snmpd.conf配置文件中,如:keventd,nfsd,bdflush
+　　10.5)重启snmpd服务
+　　10.6)再用snmpwalk连接192.168.6.53的snmp,列出proc的信息
+
+　　参考答案:
+　　snmptranslate -Td 1.3.6.1.4.1.2021
+　　snmptranslate -Tp 1.3.6.1.4.1.2021
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.2
+　　打开snmpd.conf文件
+　　vi /etc/snmp/snmpd.conf
+
+　　找到# Process checks
+　　加入:
+　　proc keventd
+　　proc nfsd
+　　proc bdflush
+
+　　service snmpd restart
+
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.2
+
+
+
+　　11.1)用snmpwalk连接192.168.6.53的snmp,通过UCD-SNMP-MIB列出shell脚本的输出信息
+　　11.2)编辑/etc/snmp/snmpd.conf文件,加入:exec echotest /bin/echo hello world和exec shelltest /bin/sh /tmp/shtest
+　　11.3)编写脚本shtest,输出hello world
+　　11.4)重启服务
+　　11.5)用snmpwalk连接192.168.6.53的snmp,列出shell脚本的输出信息
+
+　　参考答案:
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.8
+
+　　编辑/etc/snmp/snmpd.conf文件
+　　vi /etc/snmp/snmpd.conf
+
+　　找到:# Executables/scrīpts
+
+　　在后面加入:
+　　exec echotest /bin/echo hello world
+　　exec shelltest /bin/sh /tmp/shtest
+
+　　保存退出
+
+　　cd /tmp/
+　　cat > shtest
+　　#!/bin/sh
+　　echo hello world
+　　echo hi there
+　　exit 35
+
+　　service snmpd restart
+
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.8
+
+
+
+　　12.1)用snmpwalk连接192.168.6.53的snmp,通过UCD-SNMP-MIB列出磁盘信息
+　　12.2)编辑/etc/snmp/snmpd.conf文件,加入根分区和/boot分区
+　　12.3)用kill的方式重新读取配置
+　　12.4)用snmpwalk连接192.168.6.53的snmp,列出磁盘信息
+
+　　参考答案:
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.9
+
+　　编辑/etc/snmp/snmpd.conf文件
+　　vi /etc/snmp/snmpd.conf
+
+　　找到:disk checks
+　　加入:
+　　disk / 10000
+　　disk /boot 10000
+　　保存退出
+
+　　kill -HUP `ps -e|grep snmpd|awk '{print $1}'`
+
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.9
+
+
+　　13.1)用snmpwalk连接192.168.6.53的snmp,通过UCD-SNMP-MIB列出所有的系统进程
+　　13.2)编辑/etc/snmp/snmpd.conf文件，加入:exec .1.3.6.1.4.1.2021.51 ps /bin/ps
+　　13.3)用kill的方式重新读取配置
+　　13.4)用snmpwalk连接192.168.6.53的snmp,列出系统信息
+
+　　参考答案:
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.50
+
+　　编辑/etc/snmp/snmpd.conf文件
+　　vi /etc/snmp/snmpd.conf
+　　加入:
+　　exec .1.3.6.1.4.1.2021.51 ps /bin/ps
+　　保存退出
+
+　　kill -HUP `ps -e|grep snmpd|awk '{print $1}'`
+
+　　snmpwalk -v 1 192.168.6.53 -c public .1.3.6.1.4.1.2021.50

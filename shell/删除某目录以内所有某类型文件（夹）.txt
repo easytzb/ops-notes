@@ -1,0 +1,3 @@
+删除指定名称文件
+find ./ -name .svn |(while read line;do rm -rf  "$line"; done)
+find ./ -type f |grep v .svn|(while read line;do chmod 644  "$line"; done)

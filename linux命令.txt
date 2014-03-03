@@ -1,0 +1,117 @@
+远程复制
+scp -P 27100 -r root@210.14.141.228:/webser/www/mysqldump/visitlog.csv /root/tzb/a.csv
+scp -P 27100 /root/lnmp.tar.gz root@210.14.141.229:/root/lnmp.tar.gz
+
+
+//当前脚本目录
+$(cd "$(dirname "$0")"; pwd);
+
+//获取本机IP
+LC_ALL=`C /sbin/ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' |cut -d: -f2 | awk '{ print $1}'`
+LC_ALL=`/sbin/ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+
+//at用法及命令运行时间统计
+#!/bin/sh
+beginTime=`date +%s`
+/webser/php53/bin/php -f /webser/www/bak_kankan/app/Cache.php
+endTime=`date +%s`
+time=$[endTime-beginTime+900]
+time=$[time/60]
+at -f /root/tzb/at.sh now + $time minutes
+
+时间同步
+1 * * * * ntpdate asia.pool.ntp.org
+
+系统时钟写入到硬件时钟
+clock -w
+
+
+1. 查看物理CPU的个数
+#cat /proc/cpuinfo |grep "physical id"|sort |uniq|wc -l
+
+2. 查看逻辑CPU的个数
+#cat /proc/cpuinfo |grep "processor"|wc -l
+
+3. 查看CPU是几核
+#cat /proc/cpuinfo |grep "cores"|uniq
+
+4. 查看CPU的主频
+#cat /proc/cpuinfo |grep MHz|uniq
+
+5.查看连接数
+echo "`netstat -natp|grep 80|grep ESTABLISHED|wc -l`"
+6.打开名柄数
+lsof -n|awk '{print $2}'|sort|uniq -c|sort -nr|more
+7.同时查看名柄数和连接数
+echo "`netstat -natp|grep 80|grep ESTABLISHED|wc -l``lsof -n|awk '{print $2}'|sort|uniq -c|sort -nr|grep 3865`"
+
+查看网卡类型
+lspci |grep Ethernet
+
+网卡驱动版本
+modinfo bnx2   前2.0.8-rh
+
+邮件发送
+echo "yaxi yaxi yaxi"|mail -s "$LC_ALL install finished" 409183983@qq.com
+
+替换
+sed -i "s/8181/$port/g" $prefix/nginx/conf/nginx.conf
+
+
+#安装snmp
+yum install -y net-snmp net-snmp-utils net-snmp-devel
+
+
+交互输入脚本化
+(
+echo 'yourusername'          #登录远程机器的用户名
+sleep 1
+echo 'yourpw‘          #登录远程机器的密码
+sleep 1
+echo 'date'          #登录后要在远程机器上执行的本地命令
+sleep 1
+) | telnet xxx.xxx.xxx.xxx
+
+
+首先安装expect
+#yum install expect
+#cat myjob1.sh
+#!/usr/bin/expect -f
+spawn telnet xxx.xxx.xxx.xxx       #远程机器IP
+expect -re "login"
+send "yourusername\n"          #登录远程机器的用户名
+expect -re "Password"
+send "yourpw\n"          #登录远程机器的密码
+expect -re "#"
+send "date\n"          #登录后要在远程机器上执行的本地命令，这是只是查询远程机器的当地时间，你可以换成其他本地命令或脚本
+expect -re "#"
+send "exit\n"          #完成后退出
+interact
+
+
+telnet验证程序
+(k="123";s="ban.list";sleep 2;key=`sed -n 5p _`;key="$key\n$k\n$key\n";key=`echo -ne $key|sha256sum`;key=${key%?-*};echo "auth $key";sleep 2; echo "$s"; sleep 2;echo "quit";sleep 2;)| telnet 117.79.224.142 9090 >_
+
+查看centos版本号
+rpm -q centos-release
+
+一个库由哪个包提供
+rpm -q --whatprovides libpcap.so.1
+一个包的依赖关系
+rpm -q --requires -p wireshark-1.2.2-1.fc12.i686.rpm
+
+yum 查询某库所在的包 以空间换时间
+time echo "select packages.name from packages inner join provides on packages.pkgKey = provides.pkgKey where provides.name = 'libglib-2.0.so.0';" |sqlite3 /var/cache/yum/x86_64/6/base/5dc95bc0e6520499d90c6ffbad197c9031b13b19f754818dbdb11f31249cb4f6-primary.sqlite
+
+#删除邮件发送队列
+postsuper -d ALL
+
+#主机名修改
+vi /etc/hosts
+vi /etc/sysconfig/network
+hostname name
+
+dstat -cdlmnpsyt   5
+dstat -lav
+
+#删除swap分区

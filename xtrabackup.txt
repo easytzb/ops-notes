@@ -1,0 +1,4 @@
+下载地址
+http://www.percona.com/downloads/XtraBackup/LATEST/
+教程
+http://www.dedecms.com/knowledge/data-base/mysql/2012/0819/8118.html

@@ -1,0 +1,14 @@
+http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.2.2.tgz @ http://www.mongodb.org/downloads
+
+wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.2.2.tgz
+tar zxf mongodb-linux-x86_64-2.2.2.tgz
+mv mongodb-linux-x86_64-2.2.2 /webser/mongo
+mkdir /webser/mongo/data
+#start
+/webser/mongo/bin/mongod --bind_ip 192.1638.5.211  --logpath /webser/logs/mongod.log --logappend --dbpath /webser/mongo/data --directoryperdb
+
+
+#connect
+/webser/mongo/bin/mongo --host 192.168.5.211
+
+#

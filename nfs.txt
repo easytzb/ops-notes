@@ -1,0 +1,62 @@
+#check whether to install or not
+rpm -qa | grep nfs
+rpm -qa | grep rpcbind
+
+#install
+yum install nfs-utils -y
+#yum install  rpcbind –y
+#yum install  nfs-utils –y
+
+chkconfig  --level 345 nfs on
+chkconfig  --level 345 nfslock on
+chkconfig  --level 345 rpcbind on
+
+
+#config
+vim /etc/exports
+http://linux.vbird.org/linux_server/0330nfs.php#nfsserver_exports
+
+#start
+service rpcbind start
+service nfs start
+service nfslock start #/var/log/messages
+
+#port opened
+netstat -tulnp| grep -E '(rpc|nfs)'
+
+#shared folder in server
+showmount -e IP/HOSTNAME
+
+#show whole params
+tail /var/lib/nfs/etab
+
+#如果有其他用户端挂载了你的NFS档案系统时，那么用户端与档案系统资讯就会被记录到 /var/lib/nfs/xtab
+
+#修改/etc/exports后 重新挂载分享目录
+exportfs -arv
+
+#固定nfs的各功能端口
+/etc/sysconfig/nfs
+
+
+nfs客户端挂载共享目录
+1.确认本地启动了rpcbind服务
+2.showmount 查看服务端共享目录
+3.在本地建立要挂载的挂载点目录
+4.利用mount将远端主机挂载到相关目录
+
+/etc/init.d/rpcbind start
+/etc/init.d/nfslock start	#是否开启与服务端一致
+rpcinfo -p 192.168.5.215	#使用rpcinfo查看是否可以连接到服务器的nfs服务
+showmount -e 192.168.5.215	#使用rpcinfo查看是否可以连接到服务器的nfs服务
+mkdir -p /webser/nfstest
+mount -t nfs -o noexec 192.168.5.215:/webser/www/tpsp/ /webser/www/tpsp/
+
+umount /webser/nfstest
+
+Nfs优化：
+mount -t nfs –o rsize=8192,wsize=8192 192.168.140.133:/home/nfsshare /home/nfsdir/
+rsize和wsize分别是nfs读写大小，根据各自系统的情况自行去设置读写大小。
+当在系统中输入ps -ef | grep nfs，此时你会发现有很多nfsd的进程，这些进程就是nfs设置的最大连接数。
+可以在/etc/init.d/nfs中进行修改[ -z "$RPCNFSDCOUNT" ] && RPCNFSDCOUNT=8
+

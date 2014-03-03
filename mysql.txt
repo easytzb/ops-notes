@@ -1,0 +1,174 @@
+修改密码
+UPDATE `USER` SET `Password`=password('djdjddj') WHERE `USER`='stnts_ms';
+
+修改权限
+grant select,insert,update,delete on com_stnts_apps.* to "apps-connecter"@"127.0.0.1" identified by "app_*s*_center";
+grant select,insert,update,delete on loadstar.* to "pmryosxqyl"@"192.168.%.%" identified by "u~07j!f(3f0)";
+flush privileges;
+grant ALL on yiletoo.* to "liuquanjie"@"%" identified by "liuquanjie";
+grant select on stnts_kankan.* to "xms"@"%" identified by "xxmmssQ!@W";
+
+grant select on 58game_new_v3.* to "select_58_yh"@"59.175.233.154" identified by "w5y8hgame";
+grant select on com_stnts_center.* to "select_58_yh"@"59.175.233.154" identified by "w5y8hgame";
+grant select on 58game_bbs_discuz.* to "select_58_yh"@"59.175.233.154" identified by "w5y8hgame";
+grant select on 58game_new_v3.* to "select_58_yh"@"220.249.92.18" identified by "w5y8hgame";
+grant select on com_stnts_center.* to "select_58_yh"@"220.249.92.18" identified by "w5y8hgame";
+grant select on 58game_bbs_discuz.* to "select_58_yh"@"220.249.92.18" identified by "w5y8hgame";
+
+grant select on tongji.* to "tmpSelect"@"220.249.92.18" identified by "~!tmpSelect%^";
+grant select on tongji.* to "tmpSelect"@"59.175.233.154" identified by "~!tmpSelect%^";
+
+grant select on tongji.hotelclient_data1 to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data2 to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data3 to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data4 to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data5 to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+
+
+
+grant select on tongji.hotelclient_data1 to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data2 to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data3 to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data4 to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.hotelclient_data5 to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+
+
+grant select on tongji.* to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"220.249.92.18" identified by "x!mWsD!+";
+grant select on tongji.* to "hotelclientxm!s"@"59.175.233.154" identified by "x!mWsD!+";
+
+grant ALL on *.* to "webapp2012conn"@"192.168.100.%" identified by 'webdb_R710conn';
+grant ALL on media.* to "pxx"@"%" identified by "pixiaoxu0403";
+grant ALL on bbs58game.* to "wangyh"@"%" identified by 'wyhQWE!@#';
+grant ALL on bbs58game.* to "luqi"@"%" identified by "lu0302qi";
+grant ALL on bbs58game.* to "denghailin"@"%" identified by "dhl0410";
+grant ALL on bbs58game.* to "wanggang"@"%" identified by "wanggang0128";
+grant ALL on bbs58game.* to "tlh"@"%" identified by "tlh0311";
+grant ALL on sitead.* to "yuwei"@"%" identified by "yuwei0301";
+
+
+
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.66" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.67" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.68" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.69" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.70" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"119.97.168.71" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.194" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.195" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.196" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.197" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.198" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"210.51.213.199" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"220.249.92.18" identified by "j^1k#as9`d";
+grant select,insert,update,delete on loadstar.* to "r_elmsote"@"59.175.233.154" identified by "j^1k#as9`d";
+
+
+
+
+
+grant SELECT on nrep.* to "nrep_ujff"@"127.0.0.1" identified by "w0aImima";
+grant SELECT on nrep.* to "nrep_ujff"@"192.168.%.%" identified by "w0aImima";
+
+grant select on stnts_song.* to "xms_st!nt"@"220.249.92.18" identified by "!03!Q22#";
+grant ALL on *.* to "mysql_proxy"@"%" identified by "mysql_proxypw";
+
+GRANT REPLICATION CLIENT,REPLICATION SLAVE ON *.* TO lssyncconn@'192.168.%.%' IDENTIFIED BY 'syncxyyfkhny';
+
+密码修改
+1./webser/mysql55/bin/mysqladmin -uroot -p'QWERT!@#$%' password '123456'
+2.在mysql 客户端修改
+set password for tzb = password("QWERT!@#$%")
+
+//数据库修改
+ALTER TABLE adv_crm_task_team ADD `uid` INT(11) NOT NULL DEFAULT '0' COMMENT '完成人' AFTER `createtime`
+ALTER TABLE `adv_crm_company_link` CHANGE `fax` `fax` VARCHAR(40) CHARACTER SET gbk COLLATE gbk_chinese_ci NOT NULL COMMENT '传真';
+
+ALTER TABLE adv_crm_task_team ADD `comment` varchar(255) DEFAULT NULL,
+
+//表引擎修改
+alter table a2_task engine=InnoDB;
+
+//修改表名
+ALTER  TABLE table_name RENAME TO new_table_name
+
+//数据库备份
+
+
+//数据导出
+1./webser/mysql51/bin/mysql -u 'uodgv0830manger' -P33066 -h192.168.98.228 -p'jfujuogj0830'  -e "use tongji;SELECT tid,ip,dtime,cou,click FROM webtj_ipcount WHERE dtime > date_add(curdate(), interval -1 day) into outfile '/webser/www/mysqldump/visitlog.csv';" //mysqldump必须mysql:mysql
+
+2./webser/mysql51/bin/mysqldump -u 'uodgv0830manger' -P33066 -h192.168.98.228 -p'jfujuogj0830' -T /root/tzb tongji tview --fields-terminated-by="," --lines-terminated-by="\n" --fields-escaped-by="\\" //-T参数不支持远程
+
+//创建视图
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `advnew`.`adv_factory` AS select `advnew`.`adv_factory_o`.`fid` AS `fid`,`advnew`.`adv_factory_o`.`name` AS `name`,`advnew`.`adv_factory_o`.`shortname` AS `shortname`,`advnew`.`adv_factory_o`.`address` AS `address`,`advnew`.`adv_factory_o`.`tel` AS `tel`,`advnew`.`adv_factory_o`.`contact` AS `contact`,`advnew`.`adv_factory_o`.`area` AS `area`,`advnew`.`adv_factory_o`.`type` AS `type`,`advnew`.`adv_factory_o`.`balance` AS `balance`,`advnew`.`adv_factory_o`.`fee` AS `fee`,`advnew`.`adv_factory_o`.`check_code` AS `check_code`,`advnew`.`adv_factory_o`.`is_del` AS `is_del`,`advnew`.`adv_factory_o`.`delTime` AS `delTime` from `advnew`.`adv_factory_o` where (`advnew`.`adv_factory_o`.`is_del` = _gbk'0') WITH CASCADED CHECK OPTION;
+
+1./webser/mysql51/bin/mysql -u 'uodgv0830manger' -P33066 -h192.168.98.228 -p'jfujuogj0830'  -e "use tongji; CREATE VIEW tview AS SELECT tid,ip,dtime,cou,click FROM webtj_ipcount WHERE dtime > date_add(curdate(), interval -1 day) WITH CASCADED CHECK OPTION";
+
+grant SELECT ON nrep.* to "nrep_ujff"@"127.0.0.1" identified by "w0aImima";
+grant SELECT ON nrep.* to "nrep_ujff"@"192.168.%.%" identified by "w0aImima";
+
+//数据导入
+/webser/mysql51/bin/mysql -uroot -p'QWERT!@#$%'  -e "use test; LOAD DATA INFILE '/tmp/tzb/visitlog.csv' INTO  TABLE webtj_ip CHARACTER SET utf8 FIELDS TERMINATED BY '\\t' ENCLOSED BY 'null' ESCAPED BY '\\\' LINES TERMINATED BY '\\n'" #/tmp/tzb必须mysql:mysql /tmp/tzb/visitlog.log必须有mysql:mysql
+
+
+//创建infobright表
+CREATE TABLE `ggtj_hour` (
+  `tid` int(11) NOT NULL DEFAULT '0',
+  `dtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `prov` varchar(30) NOT NULL DEFAULT '',
+  `city` varchar(50) NOT NULL DEFAULT '',
+  `uv` int(11) NOT NULL DEFAULT '0',
+  `pv` int(11) NOT NULL DEFAULT '0',
+  `click` int(11) NOT NULL DEFAULT '0'
+) ENGINE=BRIGHTHOUSE DEFAULT CHARSET=utf8;
+
+
+//查询时间确定
+SET profiling=1;
+SHOW PROFILES;
+SHOW PROFILE FOR QUERY 1;
+
+//支持的引擎
+show engines\G
+
+//change master
+CHANGE MASTER TO
+  MASTER_HOST='192.168.100.125',
+  MASTER_USER='gmsyncconn',
+  MASTER_PASSWORD='syncxyyfkhny',
+  MASTER_PORT=33066,
+  MASTER_LOG_FILE='58gamemaster.000192',
+  MASTER_LOG_POS=57534038,
+  MASTER_CONNECT_RETRY=10;
+
+//TPS
+use information_schema;
+select VARIABLE_VALUE into @num_com from GLOBAL_STATUS where VARIABLE_NAME ='COM_COMMIT';
+select VARIABLE_VALUE into @num_roll from GLOBAL_STATUS where VARIABLE_NAME ='COM_ROLLBACK';
+select VARIABLE_VALUE into @uptime from GLOBAL_STATUS where VARIABLE_NAME ='UPTIME';
+select (@num_com+@num_roll)/@uptime;
+
+//QPS
+use information_schema;
+select VARIABLE_VALUE into @num_queries from GLOBAL_STATUS where VARIABLE_NAME ='QUESTIONS';
+select VARIABLE_VALUE into @uptime from GLOBAL_STATUS where VARIABLE_NAME ='UPTIME';
+select @num_queries/@uptime;
+
+//各项目报错情况 修改where子句中pagedomain即可
+(select tid, SUM(pv) cou, dtime, pagedomain, pageurl from weball_showdata_s where tid>5030 and pagedomain='www.58kankan.cn' group by tid, dtime, pagedomain, tid) union
+(select tid, SUM(pv) cou, dtime, pagedomain, pageurl from weball_showdata_d where tid>5030 and pagedomain='www.58kankan.cn' group by tid, dtime, pagedomain, tid ) order by dtime desc, tid
+
+(select tid, SUM(pv) cou, dtime, pagedomain, pageurl from weball_showdata_s where tid>5030  group by tid, dtime, pagedomain, tid) union
+(select tid, SUM(pv) cou, dtime, pagedomain, pageurl from weball_showdata_d where tid>5030  group by tid, dtime, pagedomain, tid ) order by dtime desc, tid
+
+#表修复
+myisamchk --recover
+
+#从服务器开启read_only = 1
