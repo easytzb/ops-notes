@@ -27,6 +27,24 @@ rm -rf ./varnish-3.0.3
 
  /webser/varnish/sbin/varnishd -f /webser/varnish/vcl.conf -s malloc,4G -w 10000,50000,120 -p thread_pools=32 -p thread_pool_max=10000 -p thread_pool_min=200 -p thread_pool_timeout=30 -p http_max_hdr=256 -p http_req_hdr_len=8192 -p sess_timeout=20 -T 0.0.0.0:9090 -S /webser/varnish/key
 /webser/varnish/key是密码文件
+-f 指定配置文件路径。
+-s 缓存的存储类型和存储容量。
+-s malloc; malloc类型 -s file  [default: use /tmp]
+-s file,<dir_or_file>
+-s file,<dir_or_file>,<size>
+-s persist{experimenta}
+-s file,<dir_or_file>,<size>,<granularity>
+-T 127.0.0.1:2000 开启基于文本的管理接口，可以在不停止varnish的情况下来管理varnish。推荐只监听本机对管理接口的访问。
+-a 0.0.0.0:8080 制定监听所有IP发给8080端口的http请求，如果在生产环境下，应该让varnish监听80，这是默认端口。
+-w int[,int[,int]] 工作者线程数
+-w 
+-w min,max
+-w min,max,timeout [default: -w2,500,300]
+ 
+
+-P file 指定Pid 文件。
+
+-t int 指定缓存TTL，单位s。默认为120 。VCL的TTL可以覆盖此配置。
 
 
 
@@ -56,3 +74,70 @@ Cache-Control: no-cahce 仍会缓存
 Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0 都不影响varnish的缓存
 之所以开启session 造成 varnish不能缓存，是由于php加了缓存 Expries为过去时间
 
+五.缓存清除
+//若是PURGE vcl 
+if (req.request == "PURGE") {
+	//若客户端IP不在purge列表中
+	if (!client.ip ~ purge) {
+		error 405 "Not allowed.";
+	}
+	
+	//清除所有缓存内容
+	ban("req.http.host == " + req.http.host);		
+	//给出状态信息 200
+	error 200 "PURGE Successed";
+}
+
+
+PHP函数配置
+/**
+ * 清除varnish缓存
+ * @param string $domain 网站域名(eg：www.baidu.com)
+ * @param boolean $debug 是否输出清除缓存结果信息
+ * @param array $sockIpArr varnish服务器地址及端口(端口默认为80)
+ */
+function purge($domain, $debug = false, $sockIpArr = array())
+{
+	if (empty($sockIpArr) || !is_array($sockIpArr)) {
+		$sockIpArr = array(
+			array('ip' => '119.97.137.142'),
+			array('ip' => '117.79.224.42'),
+			array('ip' => '<span class="skype_c2c_print_container">218.60.11.91</span><span class="skype_c2c_container" dir="ltr" tabindex="-1" onmouseover="SkypeClick2Call.MenuInjectionHandler.showMenu(this, event)" onmouseout="SkypeClick2Call.MenuInjectionHandler.hideMenu(event)" skype_menu_props="{&quot;numberToCall&quot;:&quot;+86218601191&quot;,&quot;isFreecall&quot;:false,&quot;isMobile&quot;:false,&quot;isRtl&quot;:false}"><span class="skype_c2c_highlighting_inactive_common" dir="ltr" skypeaction="skype_dropdown"><span class="skype_c2c_textarea_span"><img class="skype_c2c_logo_img" src="chrome-extension://lifbcibllhkdhoafpjfnlhfpfgnpldfl/call_skype_logo.png"><span class="skype_c2c_text_span">218.60.11.91</span><span class="skype_c2c_free_text_span"></span></span></span></span>'),
+		);
+	}
+
+	$result = array();
+
+	foreach ($sockIpArr as $v) {
+		$sockIp = $v['ip'];
+		$sockPort = empty($v['port'])?80:intval($v['port']);
+
+		$fp = fsockopen($sockIp, $sockPort, $errno, $errstr, 30);
+
+		if (!$fp) {
+			$result[$sockIp] = false;
+			continue;
+		}
+
+		$out = "PURGE / HTTP/1.1rn";
+		$out .= "Host: $domainrn";
+		$out .= "Connection: Closernrn";
+
+		fwrite($fp, $out);
+
+		if (!feof($fp)) {
+
+			if ($debug) {
+				while (!feof($fp)) {
+					echo fgets($fp, 128);
+				}
+			}
+
+			$result[$sockIp] = true;
+
+		} else $result[$sockIp] = false;
+
+		fclose($fp);
+	}
+	return $result;
+}
