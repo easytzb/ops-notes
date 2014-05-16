@@ -39,3 +39,4 @@
 	make
 	mv bin/phpctags /PATH/TO/
 	echo "let g:tagbar_phpctags_bin='PATH_TO_phpctags'">>/etc/vim/vimrc
+	mv plugin/tagbar-phpctags.vim ~/.vim/plugin/
