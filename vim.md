@@ -24,15 +24,13 @@
 ###tagbar
 [下载tagbar.vmb](http://www.vim.org/scripts/download_script.php?src_id=21362) @ [vim.org](http://www.vim.org/scripts/script.php?script_id=3465)
 
-安装
+####安装
+	vim tagbar.vmb
+	:so % 
+	:q
 
-		vim tagbar.vmb
-		:so % 
-		:q
-
-start
-
-		:TagbarToggle
+####start
+	:TagbarToggle
 
 ###tagbar-phpctags
 
