@@ -1,9 +1,9 @@
-###Ïà¹ØÁ´½Ó
-[phpÀ©Õ¹](phpredis https://github.com/nicolasff/phpredis)
-[redisÏÂÔØ](http://redis.io/download)
+###ç›¸å…³é“¾æ¥
+[phpæ‰©å±•phpredis](https://github.com/nicolasff/phpredis)
+[redisä¸‹è½½](http://redis.io/download)
 
-###°²×°
-°²×°½âÑ¹³öµÄÎÄ¼şmv·Åµ½Òª°²×°µÄÄ¿Â¼ make ¼´¿É
+###å®‰è£…
+å®‰è£…è§£å‹å‡ºçš„æ–‡ä»¶mvæ”¾åˆ°è¦å®‰è£…çš„ç›®å½• make å³å¯
 
 	wget http://download.redis.io/releases/redis-2.8.5.tar.gz
 	tar zxf /root/redis-2.8.5.tar.gz
@@ -11,32 +11,32 @@
 	cd /webser/redis
 	make -j 16
 
-###ÔËĞĞ
+###è¿è¡Œ
 ./src/redis-server [/path/to/redis.conf]
 
-###³Ö¾Ã»¯±£´æ
-³ıÁËsave ÅäÖÃÍâ£¬ÔÚredis shutdown¡¢´Ó»úµÄÆô¶¯¶¼»á´Ù·¢¿ìÕÕ
-rdb·½Ê½¸ü×¢ÖØĞÔÄÜ£¬ÔÚ¿ìÕÕÊ±£¬Ö÷½ø³ÌÖ»ĞèÒªforkÒ»¸ö×Ó½ø³Ì£¬´ÅÅÌµÄIOµÄ½»¸ø×Ó½ø³Ì¼´¿É¡£
-aof¸ü×¢ÖØÊı¾İµÄÍêÕûĞÔ£¬ËùÒÔÔÚappendonly yesºó£¬Æô¶¯¶¼´ÓaofÎÄ¼şÖĞ»Ö¸´Êı¾İ£¬¶ø²»ÊÇrdb
-runtimeĞŞ¸Äappendonly yesºó£¬¿ªÆôaofÇ°µÄÀÏÊı¾İ½«×Ô¶¯rewriteµ½aofÎÄ¼şÖĞ
+###æŒä¹…åŒ–ä¿å­˜
+* é™¤äº†save é…ç½®å¤–ï¼Œåœ¨redis shutdownã€ä»æœºçš„å¯åŠ¨éƒ½ä¼šä¿ƒå‘å¿«ç…§
+* rdbæ–¹å¼æ›´æ³¨é‡æ€§èƒ½ï¼Œåœ¨å¿«ç…§æ—¶ï¼Œä¸»è¿›ç¨‹åªéœ€è¦forkä¸€ä¸ªå­è¿›ç¨‹ï¼Œç£ç›˜çš„IOçš„äº¤ç»™å­è¿›ç¨‹å³å¯ã€‚
+* aofæ›´æ³¨é‡æ•°æ®çš„å®Œæ•´æ€§ï¼Œæ‰€ä»¥åœ¨appendonly yesåï¼Œå¯åŠ¨éƒ½ä»aofæ–‡ä»¶ä¸­æ¢å¤æ•°æ®ï¼Œè€Œä¸æ˜¯rdb
+* runtimeä¿®æ”¹appendonly yesåï¼Œå¼€å¯aofå‰çš„è€æ•°æ®å°†è‡ªåŠ¨rewriteåˆ°aofæ–‡ä»¶ä¸­
 
 
-###ÓÅ»¯
+###ä¼˜åŒ–
 1. Add vm.overcommit_memory = 1 to /etc/sysctl.conf and then reboot or run the command sysctl vm.overcommit_memory=1 for this to take effect immediately.
 2. setup some swap
-3. ¶ÔÓÚĞ´ÃÜ¼¯µÄ»·¾³£¬Ó¦½«ÄÚ´æÉèÖÃÎªÔ¤¼ÆµÄ2±¶
-4. Ö÷´Ó¸´ÖÆÊ±£¬¼´Ê¹ÊÇ¹Ø±ÕÁË¿ìÕÕ£¬Ò²»á¿ìÕÕ
+3. å¯¹äºå†™å¯†é›†çš„ç¯å¢ƒï¼Œåº”å°†å†…å­˜è®¾ç½®ä¸ºé¢„è®¡çš„2å€
+4. ä¸»ä»å¤åˆ¶æ—¶ï¼Œå³ä½¿æ˜¯å…³é—­äº†å¿«ç…§ï¼Œä¹Ÿä¼šå¿«ç…§
 5. If you are deploying using a virtual machine that uses the Xen hypervisor you may experience slow fork() times.
 6. Use daemonize no when run under daemontools
 
 
-###Æ½»¬ĞŞ¸ÄÅäÖÃ¼°Éı¼¶
+###å¹³æ»‘ä¿®æ”¹é…ç½®åŠå‡çº§
 [modify options runtime](http://redis.io/commands/config-set)
-[upgrade](http://redis.io/topics/admin upgrade), ÒÀÈ»×ö²»µ½Æ½»¬Éı¼¶
-* °²×°ĞÂ°æ±¾newredis,²¢ÅäÖÃÎªÀÏ°æ±¾ÊµÀıµÄ´Ó·şÎñÆ÷
-* Í¬²½Íê³Éºó£¬¹Ø±ÕÔ­redis£¬¸ü¸Ä¶Ë¿ÚÆôÓÃĞÂ°æredis
+[upgrade](http://redis.io/topics/admin upgrade), ä¾ç„¶åšä¸åˆ°å¹³æ»‘å‡çº§
+* å®‰è£…æ–°ç‰ˆæœ¬newredis,å¹¶é…ç½®ä¸ºè€ç‰ˆæœ¬å®ä¾‹çš„ä»æœåŠ¡å™¨
+* åŒæ­¥å®Œæˆåï¼Œå…³é—­åŸredisï¼Œæ›´æ”¹ç«¯å£å¯ç”¨æ–°ç‰ˆredis
 
-###¼¯ÈºÖ¸Áî
-* down-after-milliseconds ¶à³¤Ê±¼äÃ»ÏìÓ¦Ëãdown
-* can-failover ÊÇ·ñfailover
-* parallel-syncs failoverºó£¬Ò»´ÎÖØÉèÖÃ¼¸¸öslaveµÄmaster£¬
+###é›†ç¾¤æŒ‡ä»¤
+* down-after-milliseconds å¤šé•¿æ—¶é—´æ²¡å“åº”ç®—down
+* can-failover æ˜¯å¦failover
+* parallel-syncs failoveråï¼Œä¸€æ¬¡é‡è®¾ç½®å‡ ä¸ªslaveçš„masterï¼Œ
