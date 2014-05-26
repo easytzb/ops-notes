@@ -32,6 +32,7 @@
 
 ###平滑修改配置及升级
 [modify options runtime](http://redis.io/commands/config-set)
+
 [upgrade](http://redis.io/topics/admin upgrade), 依然做不到平滑升级
 * 安装新版本newredis,并配置为老版本实例的从服务器
 * 同步完成后，关闭原redis，更改端口启用新版redis
