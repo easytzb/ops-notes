@@ -1,6 +1,6 @@
 ###相关链接
-[php扩展phpredis](https://github.com/nicolasff/phpredis)
-[redis下载](http://redis.io/download)
+* [php扩展phpredis](https://github.com/nicolasff/phpredis)
+* [redis下载](http://redis.io/download)
 
 ###安装
 安装解压出的文件mv放到要安装的目录 make 即可
