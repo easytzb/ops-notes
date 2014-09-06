@@ -1,10 +1,6 @@
 " Configuration file for vim
 set modelines=0		" CVE-2007-2438
 
-" Normally we use vim-extensions. If you want true vi-compatibility
-" remove change the following statements
-set nocompatible	" Use Vim defaults instead of 100% vi compatibility
-set backspace=2		" more powerful backspacing
 set hlsearch        "高亮搜索
 set incsearch       "在输入要搜索的文字时，实时匹配
 
@@ -25,6 +21,13 @@ set fileencodings=ucs-bom,utf-8,gbk,cp936,latin-1     "设置支持打开的文�
 " 文件格式，默认 ffs=dos,unix
 set fileformat=unix                                   "设置新文件的<EOL>格式
 set fileformats=unix,dos,mac                          "给出文件的<EOL>格式类型
+
+" :BundleList 等 
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+" 使用Vundle来管理Vundle，这个必须要有。
+Bundle 'gmarik/vundle'
+Bundle 'Chiel92/vim-autoformat'
 
 filetype on                                           "启用文件类型侦测
 filetype plugin on                                    "针对不同的文件类型加载对应的插件
@@ -49,6 +52,9 @@ nmap cS :%s/\s\+$//g<cr>:noh<cr>
 
 " 常规模式下输入 cM 清除行尾 ^M 符号
 nmap cM :%s/\r$//g<cr>:noh<cr>
+
+" 常规模式下输入 cf 自动格格式化 
+nmap cf :Autoformat<CR><CR>
 
 set ignorecase                                        "搜索模式里忽略大小写
 set smartcase                                         "如果搜索模式包含大写字符，不使用 'ignorecase' 选项，只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用
