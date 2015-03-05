@@ -29,6 +29,11 @@ call vundle#rc()
 " 使用Vundle来管理Vundle，这个必须要有。
 Bundle 'gmarik/vundle'
 Bundle 'Chiel92/vim-autoformat'
+Bundle 'majutsushi/tagbar'
+Bundle 'vim-php/tagbar-phpctags.vim'
+Bundle 'jlanzarotta/bufexplorer'
+Bundle 'winmanager'
+Bundle 'scrooloose/nerdtree'
 
 filetype on                                           "启用文件类型侦测
 filetype plugin on                                    "针对不同的文件类型加载对应的插件
@@ -56,6 +61,12 @@ nmap cM :%s/\r$//g<cr>:noh<cr>
 
 " 常规模式下输入 cf 自动格格式化 
 nmap cf :Autoformat<CR><CR>
+
+" toggle the Tagbar window 
+nmap tb :TagbarToggle<CR>
+
+" toggle the vwindow 
+nmap wm :WMToggle<CR>
 
 set ignorecase                                        "搜索模式里忽略大小写
 set smartcase                                         "如果搜索模式包含大写字符，不使用 'ignorecase' 选项，只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用
@@ -88,8 +99,23 @@ set nobackup                                "设置无备份文件
 " set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
 
-let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
-
+" let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
+let g:tagbar_ctags_bin="/usr/local/bin/ctags"
+let g:tagbar_left = 0
+let g:tagbar_width = 20
+let g:tagbar_indent = 0
+let g:tagbar_autoshowtag = 1
+let g:winManagerWidth = 30
+let g:winManagerWindowLayout='NERDTree|BufExplorer|Tagbar'
+let g:NERDTree_title = "[NERDTree]"
+ 
+"function! NERDTree_Start() 
+"    exe 'NERDTree'
+"endfunction 
+"             
+"function! NERDTree_IsValid() 
+"    return 1 
+"endfunction
 
 " Don't write backup file if vim is being called by "crontab -e"
 au BufWrite /private/tmp/crontab.* set nowritebackup
@@ -97,3 +123,4 @@ au BufWrite /private/tmp/crontab.* set nowritebackup
 au BufWrite /private/etc/pw.* set nowritebackup
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
