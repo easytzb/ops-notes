@@ -30,7 +30,9 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'Chiel92/vim-autoformat'
 Bundle 'majutsushi/tagbar'
+"Bundle 'suan/vim-instant-markdown'
 Bundle 'vim-php/tagbar-phpctags.vim'
+Bundle 'shime/vim-livedown'
 "Bundle 'jlanzarotta/bufexplorer'
 "Bundle 'winmanager'
 "Bundle 'scrooloose/nerdtree'
@@ -64,6 +66,8 @@ nmap cf :Autoformat<CR><CR>
 
 " toggle the Tagbar window 
 nmap tb :TagbarToggle<CR>
+
+nmap gm :LivedownPreview<CR>
 
 " toggle the vwindow 
 "nmap wm :WMToggle<CR>
