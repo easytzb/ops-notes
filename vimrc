@@ -23,7 +23,7 @@ set fileformat=unix                                   "设置新文件的<EOL>�
 set fileformats=unix,dos,mac                          "给出文件的<EOL>格式类型
 
 " :BundleList 等 
-" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 " 使用Vundle来管理Vundle，这个必须要有。
@@ -95,6 +95,7 @@ set cursorline                                        "突出显示当前行
 " set guifont=YaHei_Consolas_Hybrid:h10                 "设置字体:字号（字体名称空格用下划线代替）
 set wrap                                            "设置不自动换行
 
+" wget http://www.vim.org/scripts/download_script.php?src_id=13400 -O ~/.vim/colors/wombat256mod.vim
 colorscheme wombat256mod                          "终端配色方案
 
 set writebackup                             "保存文件前建立备份，保存成功后删除该备份
@@ -103,8 +104,11 @@ set nobackup                                "设置无备份文件
 " set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
 
-" let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
-let g:tagbar_ctags_bin="/usr/local/bin/ctags"
+" curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > phpctags
+let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
+
+" yum install ctags
+let g:tagbar_ctags_bin="/usr/bin/ctags"
 let g:tagbar_left = 0
 let g:tagbar_width = 20
 let g:tagbar_indent = 0
