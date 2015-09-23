@@ -17,13 +17,12 @@
 	$SVN update $WEB --username='hlk' --password='hengleike'
 
 ###忽略
-	svn propedit svn:ignore
+	svn propedit svn:ignore ./
 	
 * 可以加*通配符如*.txt等
 * 如果是文件夹，就写文件夹的名字，**不能在文件夹末尾加斜杠**
 * 每个文件或者文件夹都独占一行
 * 要忽略的对象都要在版本控制之外才行，如果已经在版本控制之内的文件要忽略就先导出，然后再从SVN版本控制中删除，最后再执行上面的操作
-* svn propset等命令默认是当前目录下操作，也就是.，当然也可以赋值其他路径，不过还是推荐在要忽略文件所在目录下操作 
 
 ###创建分支
 	svn copy svn://server/path/to/trunk svn://server/path/to/branch/newBranch -m "Cut branch: newBranch"	
