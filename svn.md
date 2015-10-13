@@ -24,8 +24,12 @@
 * 每个文件或者文件夹都独占一行
 * 要忽略的对象都要在版本控制之外才行，如果已经在版本控制之内的文件要忽略就先导出，然后再从SVN版本控制中删除，最后再执行上面的操作
 
+###更新仓库地址
+	svn switch --relocate http://192.168.28.1/repos/test
+
 ###创建分支
-	svn copy svn://server/path/to/trunk svn://server/path/to/branch/newBranch -m "Cut branch: newBranch"	
+	svn copy svn://server/path/to/trunk svn://server/path/to/branch/newBranch -m "Cut branch: newBranch"
+	svn copy svn://120.25.221.142/web/trunk svn://120.25.221.142/web/branches/2.2.1 -m 'new branch 2.2.1'
 
 ###svn合并
 一个更好的名称应该是svn diff-and-apply，这是发生的所有事件：首先两个版本库树比较，然后将区别应用到本地拷贝。
@@ -40,9 +44,7 @@
 
 svn merge的语法允许非常灵活的指定三个必要的参数，如下是一些例子：
 
-	$svn merge http://svn.example.com/repos/branch1@150 \
-		http://svn.example.com/repos/branch2@212 \
-		my-working-copy
+	svn merge svn://120.25.221.142/web/branches/2.2.1@1982  svn://120.25.221.142/web/branches/2.2.1@2168 my-working-copy --dry-run
 	$svn merge -r 100:200 http://svn.example.com/repos/trunk my-working-copy
 	$svn merge -r 100:200 http://svn.example.com/repos/trunk
 
