@@ -44,7 +44,7 @@
 
 svn merge的语法允许非常灵活的指定三个必要的参数，如下是一些例子：
 
-	svn merge svn://120.25.221.142/web/branches/2.2.1@1982  svn://120.25.221.142/web/branches/2.2.1@2168 my-working-copy --dry-run
+	svn merge svn://120.25.221.142/web/branches/2.3.0@2275  svn://120.25.221.142/web/branches/2.3.0@2346 my-working-copy --dry-run
 	$svn merge -r 100:200 http://svn.example.com/repos/trunk my-working-copy
 	$svn merge -r 100:200 http://svn.example.com/repos/trunk
 

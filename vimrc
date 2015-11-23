@@ -5,12 +5,12 @@ set hlsearch        "高亮搜索
 set incsearch       "在输入要搜索的文字时，实时匹配
 
 if has("syntax")
-    syntax on
+	syntax on
 endif
 
-set mouse=a                    " 在任何模式下启用鼠标
+"set mouse=a                    " 在任何模式下启用鼠标
 set t_Co=256                   " 在终端启用256色
-set backspace=2                " 设置退格键可用
+"set backspace=indent,eol,start " 设置退格键可用
 
 set nocompatible                                      "禁用 Vi 兼容模式
 
@@ -32,7 +32,9 @@ Bundle 'Chiel92/vim-autoformat'
 Bundle 'majutsushi/tagbar'
 "Bundle 'suan/vim-instant-markdown'
 Bundle 'vim-php/tagbar-phpctags.vim'
+Bundle 'michalbachowski/vim-wombat256mod'
 Bundle 'shime/vim-livedown'
+"Bundle 'https://github.com/bpearson/vim-phpcs/blob/master/plugin/phpcs.vim'
 "Bundle 'jlanzarotta/bufexplorer'
 "Bundle 'winmanager'
 "Bundle 'scrooloose/nerdtree'
@@ -41,7 +43,7 @@ filetype on                                           "启用文件类型侦测
 filetype plugin on                                    "针对不同的文件类型加载对应的插件
 filetype plugin indent on                             "启用缩进
 set smartindent                                       "启用智能对齐方式
-set expandtab                                         "将Tab键转换为空格
+set noexpandtab                                       "将Tab键转换为空格
 set tabstop=4                                         "设置Tab键的宽度
 set shiftwidth=4                                      "换行时自动缩进4个空格
 set smarttab                                          "指定按一次backspace就删除shiftwidth宽度的空格
@@ -63,6 +65,7 @@ nmap cM :%s/\r$//g<cr>:noh<cr>
 
 " 常规模式下输入 cf 自动格格式化 
 nmap cf :Autoformat<CR><CR>
+nmap cs :CodeSniffErrorOnly<CR>
 
 " toggle the Tagbar window 
 nmap tb :TagbarToggle<CR>
@@ -95,7 +98,6 @@ set cursorline                                        "突出显示当前行
 " set guifont=YaHei_Consolas_Hybrid:h10                 "设置字体:字号（字体名称空格用下划线代替）
 set wrap                                            "设置不自动换行
 
-" wget http://www.vim.org/scripts/download_script.php?src_id=13400 -O ~/.vim/colors/wombat256mod.vim
 colorscheme wombat256mod                          "终端配色方案
 
 set writebackup                             "保存文件前建立备份，保存成功后删除该备份
@@ -104,11 +106,8 @@ set nobackup                                "设置无备份文件
 " set noswapfile                              "设置无临时文件
 set vb t_vb=                                "关闭提示音
 
-" curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > phpctags
-let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
-
-" yum install ctags
-let g:tagbar_ctags_bin="/usr/bin/ctags"
+" let g:tagbar_phpctags_bin='/usr/sbin/phpctags'
+let g:tagbar_ctags_bin="/usr/local/bin/ctags"
 let g:tagbar_left = 0
 let g:tagbar_width = 20
 let g:tagbar_indent = 0
@@ -134,31 +133,31 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " http://vim.wikia.com/wiki/Show_tab_number_in_your_tab_line
 if exists("+showtabline")
-    function MyTabLine()
-        let s = ''
-        let t = tabpagenr()
-        let i = 1
-        while i <= tabpagenr('$')
-            let buflist = tabpagebuflist(i)
-            let winnr = tabpagewinnr(i)
-            let s .= '%' . i . 'T'
-            let s .= (i == t ? '%1*' : '%2*')
-            let s .= ' '
-            let s .= i . ')'
-            let s .= ' %*'
-            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-            let file = bufname(buflist[winnr - 1])
-            let file = fnamemodify(file, ':p:t')
-            if file == ''
-                let file = '[No Name]'
-            endif
-            let s .= file
-            let i = i + 1
-        endwhile
-        let s .= '%T%#TabLineFill#%='
-        let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
-        return s
-    endfunction
-    set stal=2
-    set tabline=%!MyTabLine()
+	function MyTabLine()
+		let s = ''
+		let t = tabpagenr()
+		let i = 1
+		while i <= tabpagenr('$')
+			let buflist = tabpagebuflist(i)
+			let winnr = tabpagewinnr(i)
+			let s .= '%' . i . 'T'
+			let s .= (i == t ? '%1*' : '%2*')
+			let s .= ' '
+			let s .= i . ')'
+			let s .= ' %*'
+			let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+			let file = bufname(buflist[winnr - 1])
+			let file = fnamemodify(file, ':p:t')
+			if file == ''
+				let file = '[No Name]'
+			endif
+			let s .= file
+			let i = i + 1
+		endwhile
+		let s .= '%T%#TabLineFill#%='
+		let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+		return s
+	endfunction
+	set stal=2
+	set tabline=%!MyTabLine()
 endif
